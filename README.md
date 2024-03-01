@@ -1,6 +1,4 @@
 # SearchBytes
-Claro! Aqui está um exemplo de README para um repositório GitHub destinado a um projeto de Trabalho de Graduação (TG) com foco no desenvolvimento de um software com ferramentas para auxiliar professores:
-
 ---
 
 # Projeto de Trabalho de Graduação - Sistema de Apoio ao Ensino

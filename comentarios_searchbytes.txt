@@ -1,0 +1,17 @@
+Diagrama de classes - ajustes
+Tirar a parte do calendários dos requisitos e diagramas anteriores
+
+
+
+Nas telas - e se utilizasse aquele menus que ficam no canto superior?
+Para sair, alterar senha etc
+Menu de 3 linhas?
+
+Semana que vem
+Tela de cadastro do Professor
+Gerenciar Turma (enviar aviso, gerenciar nota)
+Importar Lista (turma ou arquivo)
+
+E outros que conseguirem fazer
+
+

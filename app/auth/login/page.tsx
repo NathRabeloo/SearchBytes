@@ -11,6 +11,13 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (email && password) {
+      // Simulação de login bem-sucedido
+      window.location.href = '/app/home/page'; // Redireciona para a página home
+    } else {
+      alert('E-mail ou senha inválidos.'); // Mensagem de erro simples
+    }
   };
 
   return (
@@ -62,12 +69,14 @@ export default function LoginPage() {
               <Link href="/auth/recover" className="absolute right-0 top-full mt-2 text-sm text-white">Esqueci minha senha</Link> 
             </div>
           {/* botão pra ir pra entrar */}
+          <Link href="/home">
             <button
               type="submit"
               className="w-full bg-white text-black p-2 rounded-full  hover:bg-gray-300 transition"
             >
               Entrar
             </button>
+          </Link>
           </form>
 
           {/* botão pra ir pra area de registro */}

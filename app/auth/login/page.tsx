@@ -37,9 +37,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen"
-      style={{ backgroundImage: 'url(/fatec-sorocaba.jpeg)' }}
-    >
+    <div className="flex min-h-screen" 
+    style={{ 
+      backgroundImage: 'url(/fatec-sorocaba.jpeg)', 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center' 
+    }}>
       {/* Texto que fica na esquerda */}
       <div className="flex-1 relative bg-cover bg-center">
         <div className="absolute inset-0 bg-black bg-opacity-30" />

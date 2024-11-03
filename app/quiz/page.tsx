@@ -1,11 +1,10 @@
 // pages/quizzes/index.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
 import Link from 'next/link';
 
-// Componente do Menu Lateral
 const Sidebar = () => {
   return (
     <div style={{ width: '250px', padding: '20px', backgroundColor: '#F1F5F9', position: 'fixed', height: '100%', boxShadow: '2px 0 5px rgba(0,0,0,0.1)' }}>
@@ -20,25 +19,38 @@ const Sidebar = () => {
         <li style={{ margin: '10px 0' }}>
           <Link href="/polls">Enquetes</Link>
         </li>
-        {/* Adicione outros links conforme necessário */}
       </ul>
     </div>
   );
 };
 
-// Página de Quizzes
 const QuizzesPage = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionText, setQuestionText] = useState('');
-  const [optionTexts, setOptionTexts] = useState<string[]>(['']); // Inicia com um campo de opção
+  const [optionTexts, setOptionTexts] = useState<string[]>(['']);
   const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
   const [qrCodeVisible, setQrCodeVisible] = useState(false);
 
   interface Question {
     text: string;
     options: string[];
-    correctAnswer: number; // índice da resposta correta
+    correctAnswer: number;
   }
+
+  useEffect(() => {
+    // Função para buscar as perguntas já salvas na API
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch('/api/quizzes'); // Alterar para a URL correta da sua API
+        const data = await response.json();
+        setQuestions(data);
+      } catch (error) {
+        console.error('Erro ao buscar perguntas:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   const handleAddOption = () => {
     setOptionTexts([...optionTexts, '']);
@@ -50,7 +62,7 @@ const QuizzesPage = () => {
     setOptionTexts(updatedOptions);
   };
 
-  const handleAddQuestion = (e: React.FormEvent) => {
+  const handleAddQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     if (questionText.trim() === '' || optionTexts.some(option => option.trim() === '') || correctAnswer === null) {
       alert('Por favor, preencha todos os campos corretamente.');
@@ -63,10 +75,29 @@ const QuizzesPage = () => {
       correctAnswer,
     };
 
-    setQuestions([...questions, newQuestion]);
-    setQuestionText('');
-    setOptionTexts(['']); // Reseta as opções
-    setCorrectAnswer(null);
+    try {
+      // Chamada para a API para adicionar a nova pergunta
+      const response = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newQuestion),
+      });
+
+      if (response.ok) {
+        const savedQuestion = await response.json();
+        setQuestions([...questions, savedQuestion]);
+        setQuestionText('');
+        setOptionTexts(['']);
+        setCorrectAnswer(null);
+      } else {
+        throw new Error('Erro ao salvar a pergunta.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao adicionar a pergunta. Tente novamente.');
+    }
   };
 
   const handleToggleQRCode = () => {
@@ -75,7 +106,7 @@ const QuizzesPage = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar /> {/* Adiciona o menu lateral */}
+      <Sidebar />
       <div style={{ padding: '40px', marginLeft: '250px', width: '100%', backgroundColor: '#EFF6FF', minHeight: '100vh' }}>
         <h1 style={{ textAlign: 'center', color: '#0084FF' }}>Criar Quiz Rápido</h1>
         <form onSubmit={handleAddQuestion} style={{ marginBottom: '40px' }}>

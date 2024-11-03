@@ -16,3 +16,30 @@ model User {
   name     String
   createdAt DateTime @default(now())
 }
+
+model Quiz {
+  id         Int       @id @default(autoincrement())
+  title      String
+  createdBy  String
+  questions  Question[]
+  responses  Response[]
+}
+
+model Question {
+  id                    Int      @id @default(autoincrement())
+  quizId                Int
+  question              String
+  options               String[] // armazenar como texto
+  correctOptionIndex    Int
+  quiz                  Quiz     @relation(fields: [quizId], references: [id])
+}
+
+model Response {
+  id         Int      @id @default(autoincrement())
+  quizId     Int
+  answers    String   // Aqui você pode armazenar as respostas como JSON ou TEXT
+  createdAt  DateTime @default(now())
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+}
+
+

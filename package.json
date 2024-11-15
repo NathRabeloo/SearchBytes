@@ -14,10 +14,12 @@
     "bcryptjs": "^2.4.3",
     "next": "^14.2.7",
     "next-auth": "^4.24.7",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.3.0"
+    "react-icons": "^5.3.0",
+    "react-qr-code": "^2.0.15"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

@@ -13,9 +13,12 @@ export default function RecoverPage() {
   };
 
   return (
-    <div className="flex min-h-screen"
-    style={{ backgroundImage: 'url(/fatec-sorocaba.jpeg)' }}
-    >
+    <div className="flex min-h-screen" 
+    style={{ 
+      backgroundImage: 'url(/fatec-sorocaba.jpeg)', 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center' 
+    }}>
       {/* texto que fica na esquerda */}
       <div
         className="flex-1 relative bg-cover bg-center"

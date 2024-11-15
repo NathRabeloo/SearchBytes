@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FaQuestionCircle, FaPoll, FaRandom, FaChalkboardTeacher, FaTable, FaBook } from 'react-icons/fa';
 
 const Home = () => {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
 
   const items = [
-    { name: 'Quizzes', icon: <FaQuestionCircle size={40} /> },
-    { name: 'Enquetes', icon: <FaPoll size={40} /> },
-    { name: 'Sorteador', icon: <FaRandom size={40} /> },
-    { name: 'Tutoriais', icon: <FaChalkboardTeacher size={40} /> },
-    { name: 'Modelos de Planilhas', icon: <FaTable size={40} /> },
-    { name: 'Bibliografia', icon: <FaBook size={40} /> },
+    { name: 'Quizzes', icon: <FaQuestionCircle size={40} />, route: '/quiz' },
+    { name: 'Enquetes', icon: <FaPoll size={40} />, route: '/enquete' },
+    { name: 'Sorteador', icon: <FaRandom size={40} />, route: '/sorteador' },
+    { name: 'Tutoriais', icon: <FaChalkboardTeacher size={40} />, route: '/tutoriais' },
+    { name: 'Modelos de Planilhas', icon: <FaTable size={40} />, route: '/modelos' },
+    { name: 'Bibliografia', icon: <FaBook size={40} />, route: '/bibliografia' },
   ];
 
   const handleSearch = (e) => {
@@ -23,7 +25,15 @@ const Home = () => {
   };
 
   const handleButtonClick = (item) => {
-    alert(`Você clicou em ${item.name}`);
+    if (item.route) {
+      router.push(item.route);
+    } else {
+      alert(`Você clicou em ${item.name}`);
+    }
+  };
+
+  const handleMenuClick = (route) => {
+    router.push(route);
   };
 
   return (
@@ -40,51 +50,44 @@ const Home = () => {
           <nav>
             <ul style={{ listStyleType: 'none', padding: '0' }}>
               <li style={{ marginBottom: '20px' }}>
-                <a href="#" style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+                <button onClick={() => handleMenuClick('/home')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>🏠</span>
                   Home
-                </a>
+                </button>
               </li>
               <li style={{ marginBottom: '20px' }}>
-                <a href="#" style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+                <button onClick={() => handleMenuClick('/perfil')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>👤</span>
                   Perfil
-                </a>
+                </button>
               </li>
               <li style={{ marginBottom: '20px' }}>
-                <a href="#" style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+                <button onClick={() => handleMenuClick('/relatorios')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>📊</span>
                   Relatórios
-                </a>
+                </button>
               </li>
               <li style={{ marginBottom: '20px' }}>
-                <a href="#" style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+                <button onClick={() => handleMenuClick('/configuracoes')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>🛠</span>
                   Configurações
-                </a>
+                </button>
               </li>
             </ul>
           </nav>
         </div>
 
         <div>
-          <a href="#" style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+          <button onClick={() => handleMenuClick('/sair')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
             <span style={{ marginRight: '10px' }}>🚪</span>
             Sair
-          </a>
+          </button>
         </div>
       </div>
 
       <div style={{ flex: 1, backgroundColor: '#EFF6FF', padding: '40px', color: '#1F2937' }}>
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '40px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
           <h1 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '2.5rem', color: '#0084FF' }}>Teacher Desk</h1>
-
-          <div style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '1.8rem', color: '#1F2937', marginBottom: '20px' }}>Como usar a plataforma?</h2>
-            <p style={{ fontSize: '16px', color: '#374151' }}>
-              Navegue facilmente pelo painel lateral para acessar suas ferramentas. Escolha "Quizzes", "Enquetes", ou qualquer outra opção para começar. Use o campo de busca para encontrar rapidamente o que precisa!
-            </p>
-          </div>
 
           <form onSubmit={handleSearch} style={{ marginBottom: '40px' }}>
             <label style={{ display: 'block', marginBottom: '10px', fontSize: '18px', color: '#1F2937' }}>Pesquisar</label>
@@ -103,27 +106,6 @@ const Home = () => {
                 backgroundColor: '#F9FAFB'
               }}
             />
-
-            <label style={{ display: 'block', marginBottom: '10px', fontSize: '18px', color: '#1F2937' }}>Filtrar por:</label>
-            <select
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '1px solid #D1D5DB',
-                marginBottom: '20px',
-                fontSize: '16px',
-                backgroundColor: '#F9FAFB'
-              }}
-            >
-              <option>Quizzes</option>
-              <option>Enquetes</option>
-              <option>Sorteador</option>
-              <option>Tutoriais</option>
-              <option>Modelos de Planilhas</option>
-              <option>Bibliografia</option>
-            </select>
-
             <button
               type="submit"
               style={{
@@ -155,7 +137,7 @@ const Home = () => {
                   cursor: 'pointer',
                   transition: 'transform 0.2s ease, background-color 0.3s ease',
                 }}
-                onClick={() => handleButtonClick(item)} // Adicionando o clique
+                onClick={() => handleButtonClick(item)}
               >
                 <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60px' }}>
                   {item.icon}

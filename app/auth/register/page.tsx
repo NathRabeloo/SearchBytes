@@ -46,9 +46,12 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen"
-    style={{ backgroundImage: 'url(/fatec-sorocaba.jpeg)' }}
-    >
+    <div className="flex min-h-screen" 
+    style={{ 
+      backgroundImage: 'url(/fatec-sorocaba.jpeg)', 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center' 
+    }}>
       <div className="flex-1 relative bg-cover bg-center">
         <div className="absolute inset-0 bg-black bg-opacity-30" />
         <div className="relative z-10 flex flex-col  items-start p-10 text-white h-full">

@@ -119,13 +119,13 @@ export default function QuizPage() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <input
             type="text"
-            placeholder="Quiz Title"
+            placeholder="Título do Quiz"
             className="w-full p-2 border rounded mb-4 text-gray-800"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <textarea
-            placeholder="Quiz Description"
+            placeholder="Descrição do Quiz"
             className="w-full p-2 border rounded mb-4 text-gray-800"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -145,7 +145,7 @@ export default function QuizPage() {
             onClick={addQuestion}
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mb-4"
           >
-            Add Question
+            Adicionar Pergunta
           </button>
           
           <div className="flex justify-end space-x-2">
@@ -153,13 +153,13 @@ export default function QuizPage() {
               onClick={resetForm}
               className="bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               onClick={saveQuiz}
               className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
             >
-              {currentQuiz ? "Update Quiz" : "Save Quiz"}
+              {currentQuiz ? "Update Quiz" : "Salvar Quiz"}
             </button>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default function QuizPage() {
         )}
         
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Your Quizzes</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Quizzes Criados</h2>
           <div className="bg-white rounded-lg shadow-md">
             {quizzes.map((quiz) => (
               <div key={quiz.id} className="border-b last:border-b-0 p-4 flex justify-between items-center">
@@ -292,7 +292,7 @@ function QuestionItem({ question, index, updateQuestion, removeQuestion }) {
           disabled
         />
       )}
-      
+    
       <div className="mt-2">
         <label className="flex items-center">
           <input

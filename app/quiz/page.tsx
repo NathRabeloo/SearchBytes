@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import QRCode from "react-qr-code";
 import Sidebar from '../components/Sidebar/Sidebar';
-
+import { PrismaClient } from '@prisma/client';
 export default function QuizPage() {
-  const [quizzes, setQuizzes] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [questions, setQuestions] = useState([]);
-  const [currentQuiz, setCurrentQuiz] = useState(null);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [quizzes, setQuizzes] = useState<Array<{ id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }>>([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [questions, setQuestions] = useState<Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }>>([]);
+  const [currentQuiz, setCurrentQuiz] = useState<null | { id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export default function QuizPage() {
       const response = await fetch('/api/quizzes');
       if (response.ok) {
         const data = await response.json();
+        console.log("Quizzes deu certo o fetch");
         setQuizzes(data);
       } else {
         console.error('Failed to fetch quizzes');
@@ -34,66 +35,76 @@ export default function QuizPage() {
   const addQuestion = () => {
     setQuestions([
       ...questions,
-      { id: Date.now(), text: "", type: "multiple-choice", options: [], required: false },
+      { id: Date.now(), text: '', type: 'multiple-choice', options: [], required: false },
     ]);
   };
 
-  const updateQuestion = (id, updatedQuestion) => {
-    setQuestions(questions.map((q) => (q.id === id ? updatedQuestion : q)));
+  const updateQuestion = (questionId: number, updatedQuestion: { id: number; text: string; type: string; options: { id: number; text: string }[]; required: boolean; }) => {
+    setQuestions(questions.map((q) => (q.id === questionId ? updatedQuestion : q)));
   };
 
-  const removeQuestion = (id) => {
+  const removeQuestion = (id:number) => {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const saveQuiz = async () => {
-    const quizData = {
-      title,
-      description,
-      questions,
-    };
+const saveQuiz = async () => {
+  try {
+    const response = await fetch('/api/quizzes', {
+      method: currentQuiz ? 'PUT' : 'POST',
+      
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        questions: questions.map((question) => ({
+          text: question.text,
+          type: question.type,
+          options: question.options.map((option) => ({ text: option.text })),
+          required: question.required,
+        })),
+      }),
+    });
 
-    try {
-      const response = await fetch('/api/quizzes', {
-        method: currentQuiz ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(currentQuiz ? { ...quizData, id: currentQuiz.id } : quizData),
-      });
-
-      if (response.ok) {
-        const savedQuiz = await response.json();
+    if (response.ok) {
+      const savedQuiz = await response.json();
+      console.log("Quizzes deu certo SALVAR");
+      if (savedQuiz.id) { // Check if the savedQuiz object has an id
         if (currentQuiz) {
-          setQuizzes(quizzes.map(q => q.id === savedQuiz.id ? savedQuiz : q));
+          setQuizzes((prevQuizzes) => prevQuizzes.map((q) => (q.id === savedQuiz.id ? savedQuiz : q)));
         } else {
-          setQuizzes([...quizzes, savedQuiz]);
+          setQuizzes((prevQuizzes) => [...prevQuizzes, savedQuiz]);
         }
         resetForm();
         setQrCodeUrl(`${window.location.origin}/quiz/${savedQuiz.id}`);
       } else {
-        console.error('Failed to save quiz');
+        console.error('Failed to save quiz: missing id in response');
       }
-    } catch (error) {
-      console.error('Error saving quiz:', error);
+    } else {
+      console.error('Failed to save quiz');
     }
-  };
+  } catch (error) {
+    console.error('Error saving quiz:', error);
+  }
+};
 
-  const editQuiz = (quiz) => {
-    setCurrentQuiz(quiz);
-    setTitle(quiz.title);
-    setDescription(quiz.description);
-    setQuestions(quiz.questions);
-  };
 
-  const deleteQuiz = async (id) => {
+const editQuiz = (quiz: { id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }) => {
+  setCurrentQuiz(quiz);
+  setTitle(quiz.title);
+  setDescription(quiz.description);
+  setQuestions(quiz.questions);
+};
+
+  const deleteQuiz = async (id: number) => {
     try {
       const response = await fetch(`/api/quizzes/${id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        setQuizzes(quizzes.filter(q => q.id !== id));
+        setQuizzes(quizzes.filter((q) => q.id !== id));
       } else {
         console.error('Failed to delete quiz');
       }
@@ -104,17 +115,17 @@ export default function QuizPage() {
 
   const resetForm = () => {
     setCurrentQuiz(null);
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
     setQuestions([]);
-    setQrCodeUrl("");
+    setQrCodeUrl('');
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 p-8 overflow-y-auto">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">Create a Quiz</h1>
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Crie um quiz</h1>
         
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <input
@@ -133,19 +144,19 @@ export default function QuizPage() {
           
           {questions.map((question, index) => (
             <QuestionItem
-              key={question.id}
-              question={question}
-              index={index}
-              updateQuestion={updateQuestion}
-              removeQuestion={removeQuestion}
-            />
+            key={question.id}
+            question={question}
+            index={index}
+            updateQuestion={(questionId, updatedQuestion) => updateQuestion(questionId, { ...updatedQuestion, required: false })}
+            removeQuestion={removeQuestion}
+          />
           ))}
           
           <button
             onClick={addQuestion}
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mb-4"
           >
-            Adicionar Pergunta
+            Adicionar pergunta
           </button>
           
           <div className="flex justify-end space-x-2">
@@ -159,7 +170,7 @@ export default function QuizPage() {
               onClick={saveQuiz}
               className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
             >
-              {currentQuiz ? "Update Quiz" : "Salvar Quiz"}
+              {currentQuiz ? 'Update Quiz' : 'Save Quiz'}
             </button>
           </div>
         </div>
@@ -172,7 +183,7 @@ export default function QuizPage() {
         )}
         
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Quizzes Criados</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Quizzes criados</h2>
           <div className="bg-white rounded-lg shadow-md">
             {quizzes.map((quiz) => (
               <div key={quiz.id} className="border-b last:border-b-0 p-4 flex justify-between items-center">
@@ -200,16 +211,21 @@ export default function QuizPage() {
   );
 }
 
-function QuestionItem({ question, index, updateQuestion, removeQuestion }) {
+function QuestionItem({ question, index, updateQuestion, removeQuestion }: {
+  question: { id: number; text: string; type: string; options: Array<{ id: number; text: string }> };
+  index: number;
+  updateQuestion: (questionId: number, updatedQuestion: { id: number; text: string; type: string; options: Array<{ id: number; text: string }> }) => void;
+  removeQuestion: (questionId: number) => void;
+}) {
   const addOption = () => {
     const updatedQuestion = {
       ...question,
-      options: [...question.options, { id: Date.now(), text: "" }],
+      options: [...question.options, { id: Date.now(), text: '' }],
     };
     updateQuestion(question.id, updatedQuestion);
   };
 
-  const updateOptionText = (optionIndex, text) => {
+  const updateOptionText = (optionIndex: number, text: string) => {
     const updatedOptions = question.options.map((opt, idx) =>
       idx === optionIndex ? { ...opt, text } : opt
     );
@@ -224,12 +240,12 @@ function QuestionItem({ question, index, updateQuestion, removeQuestion }) {
           onClick={() => removeQuestion(question.id)}
           className="text-red-500 hover:text-red-700"
         >
-          Remove
+          Remover pergunta
         </button>
       </div>
       <input
         type="text"
-        placeholder="Enter your question"
+        placeholder="Digite sua pergunta"
         className="w-full p-2 border rounded mb-2 text-gray-800"
         value={question.text}
         onChange={(e) => updateQuestion(question.id, { ...question, text: e.target.value })}
@@ -239,20 +255,20 @@ function QuestionItem({ question, index, updateQuestion, removeQuestion }) {
         value={question.type}
         onChange={(e) => updateQuestion(question.id, { ...question, type: e.target.value })}
       >
-        <option value="multiple-choice">Multiple Choice</option>
-        <option value="text">Text</option>
+        <option value="multiple-choice">Mútlipla escolha</option>
+        <option value="text">Texto</option>
         <option value="rating">Rating</option>
-        <option value="date">Date</option>
+        <option value="date">Data</option>
       </select>
       
-      {question.type === "multiple-choice" && (
+      {question.type === 'multiple-choice' && (
         <div className="ml-4">
           {question.options.map((option, i) => (
             <div key={option.id} className="flex items-center mt-2">
               <input type="radio" disabled className="mr-2" />
               <input
                 type="text"
-                placeholder={`Option ${i + 1}`}
+                placeholder={`Opção ${i + 1}`}
                 className="flex-1 p-2 border rounded text-gray-800"
                 value={option.text}
                 onChange={(e) => updateOptionText(i, e.target.value)}
@@ -263,47 +279,45 @@ function QuestionItem({ question, index, updateQuestion, removeQuestion }) {
             onClick={addOption}
             className="mt-2 text-blue-500 hover:text-blue-700"
           >
-            + Add Option
+            + Adicionar opção
           </button>
         </div>
       )}
       
-      {question.type === "text" && (
+      {question.type === 'text' && (
         <input
           type="text"
-          placeholder="Short answer text"
-          className="w-full p-2 border rounded mt-2 bg-gray-100 text-gray-800"
-          disabled
+          placeholder="Texto de resposta curta"
+          className="w-full p-2 border rounded text-gray-800"
+          value={question.text}
+          onChange={(e) => updateQuestion(question.id, { ...question, text: e.target.value })}
         />
       )}
       
-      {question.type === "rating" && (
-        <div className="flex items-center mt-2">
-          <span className="text-gray-800">1</span>
-          <input type="range" min="1" max="5" className="mx-2 flex-1" disabled />
-          <span className="text-gray-800">5</span>
+      {question.type === 'rating' && (
+        <div className="flex items-center">
+          <span className="mr-2">Rating:</span>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            className="w-16 p-2 border rounded text-gray-800"
+            value={question.text}
+            onChange={(e) => updateQuestion(question.id, { ...question, text: e.target.value })}
+          />
         </div>
       )}
       
-      {question.type === "date" && (
+      {question.type === 'date' && (
         <input
           type="date"
-          className="w-full p-2 border rounded mt-2 bg-gray-100 text-gray-800"
-          disabled
+          className="w-full p-2 border rounded text-gray-800"
+          value={question.text}
+          onChange={(e) => updateQuestion(question.id, { ...question, text: e.target.value })}
         />
       )}
-    
-      <div className="mt-2">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={question.required}
-            onChange={(e) => updateQuestion(question.id, { ...question, required: e.target.checked })}
-            className="mr-2"
-          />
-          <span className="text-gray-800">Required question</span>
-        </label>
-      </div>
     </div>
   );
+  
 }
+

@@ -3,8 +3,16 @@ import prisma from '@/lib/prisma';
 
 // GET: Retrieve all quizzes
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const quizId = searchParams.get('id');  // Obtém o 'id' da URL (por exemplo, /edit-quiz?id=1)
+
+  if (!quizId) {
+    return NextResponse.json({ message: 'Quiz ID is required' }, { status: 400 });
+  }
+
   try {
-    const quizzes = await prisma.quiz.findMany({
+    const quiz = await prisma.quiz.findUnique({
+      where: { id: Number(quizId) },
       include: {
         questions: {
           include: {
@@ -13,10 +21,15 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-    return NextResponse.json(quizzes, { status: 200 });
+
+    if (!quiz) {
+      return NextResponse.json({ message: 'Quiz not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(quiz, { status: 200 });
   } catch (error) {
-    console.error('Error fetching quizzes:', error); // Log do erro
-    return NextResponse.json({ message: 'Error fetching quizzes' }, { status: 500 });
+    console.error('Error fetching quiz:', error);
+    return NextResponse.json({ message: 'Error fetching quiz' }, { status: 500 });
   }
 }
 
@@ -61,17 +74,29 @@ export async function POST(req: NextRequest) {
 }
 
 // PUT: Update an existing quiz
+// PUT: Update an existing quiz
 export async function PUT(req: NextRequest) {
   try {
-    const { id, title, description, questions } = await req.json();
+    const { id, title, description, questions } = await req.json(); // Pega o ID do corpo
+    console.log('Recebido:', { id, title, description, questions });
 
+    if (!id) {
+      return NextResponse.json({ message: 'Quiz ID is required' }, { status: 400 });
+    }
+
+    // Excluir todas as perguntas e opções relacionadas ao quiz
+    await prisma.option.deleteMany({
+      where: { question: { quizId: id } },
+    });
+
+    // Atualiza o quiz
     const updatedQuiz = await prisma.quiz.update({
-      where: { id },
+      where: { id: Number(id) },  // Usar o ID do corpo da requisição
       data: {
         title,
         description,
         questions: {
-          deleteMany: {},  // Clear old questions first
+          deleteMany: {}, // Excluir as perguntas antigas
           create: questions.map((question: { text: string; type: string; required: boolean; options: { text: string }[] }) => ({
             text: question.text,
             type: question.type,
@@ -82,18 +107,11 @@ export async function PUT(req: NextRequest) {
           })),
         },
       },
-      include: {
-        questions: {
-          include: {
-            options: true,
-          },
-        },
-      },
     });
 
     return NextResponse.json(updatedQuiz, { status: 200 });
   } catch (error) {
-    console.error('Error updating quiz:', error); // Log do erro
+    console.error('Error updating quiz:', error);
     return NextResponse.json({ message: 'Error updating quiz' }, { status: 500 });
   }
 }

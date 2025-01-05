@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 export default function QuizPage() {
   const [quizzes, setQuizzes] = useState<Array<{ id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }>>([]);
   const [title, setTitle] = useState('');
+  const [id, setId] = useState(0);
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState<Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }>>([]);
   const [currentQuiz, setCurrentQuiz] = useState<null | { id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }>(null);
@@ -32,6 +33,8 @@ export default function QuizPage() {
     }
   };
 
+  
+
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -47,51 +50,54 @@ export default function QuizPage() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-const saveQuiz = async () => {
-  try {
-    const response = await fetch('/api/quizzes', {
-      method: currentQuiz ? 'PUT' : 'POST',
-      
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        questions: questions.map((question) => ({
-          text: question.text,
-          type: question.type,
-          options: question.options.map((option) => ({ text: option.text })),
-          required: question.required,
-        })),
-      }),
-    });
-
-    if (response.ok) {
-      const savedQuiz = await response.json();
-      console.log("Quizzes deu certo SALVAR");
-      if (savedQuiz.id) { // Check if the savedQuiz object has an id
-        if (currentQuiz) {
-          setQuizzes((prevQuizzes) => prevQuizzes.map((q) => (q.id === savedQuiz.id ? savedQuiz : q)));
+  const saveQuiz = async () => {
+    try {
+      const response = await fetch('/api/quizzes', {
+        method: currentQuiz ? 'PUT' : 'POST', // Se já existe, faz PUT, caso contrário POST
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: currentQuiz?.id, // Envia o ID no corpo da requisição
+          title,
+          description,
+          questions: questions.map((question) => ({
+            text: question.text,
+            type: question.type,
+            options: question.options.map((option) => ({ text: option.text })),
+            required: question.required,
+          })),
+        }),
+      });
+  
+      if (response.ok) {
+        const savedQuiz = await response.json();
+        console.log("Quiz salvo com sucesso", savedQuiz);
+        if (savedQuiz.id) {
+          if (currentQuiz) {
+            setQuizzes((prevQuizzes) =>
+              prevQuizzes.map((q) => (q.id === savedQuiz.id ? savedQuiz : q))
+            );
+          } else {
+            setQuizzes((prevQuizzes) => [...prevQuizzes, savedQuiz]);
+          }
+          resetForm();
+          setQrCodeUrl(`${window.location.origin}/quiz/${savedQuiz.id}`);
         } else {
-          setQuizzes((prevQuizzes) => [...prevQuizzes, savedQuiz]);
+          console.error('Failed to save quiz: missing id in response');
         }
-        resetForm();
-        setQrCodeUrl(`${window.location.origin}/quiz/${savedQuiz.id}`);
       } else {
-        console.error('Failed to save quiz: missing id in response');
+        console.error('Failed to save quiz');
       }
-    } else {
-      console.error('Failed to save quiz');
+    } catch (error) {
+      console.error('Error saving quiz:', error);
     }
-  } catch (error) {
-    console.error('Error saving quiz:', error);
-  }
-};
+  };
 
 
 const editQuiz = (quiz: { id: number; title: string; description: string; questions: Array<{ id: number; text: string; type: string; options: Array<{ id: number; text: string }>; required: boolean; }> }) => {
-  setCurrentQuiz(quiz);
+  setCurrentQuiz(quiz); // Certifique-se de que o estado de currentQuiz recebe o quiz completo com o ID
+  setId(quiz.id);
   setTitle(quiz.title);
   setDescription(quiz.description);
   setQuestions(quiz.questions);

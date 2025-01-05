@@ -26,18 +26,18 @@ model Quiz {
 }
 
 model Question {
-  id         Int        @id @default(autoincrement())
-  text       String
-  type       String
-  options    Option[]   @relation("QuestionOptions")
-  required   Boolean
-  quizId     Int
-  quiz       Quiz       @relation(fields: [quizId], references: [id])
+  id          Int        @id @default(autoincrement())
+  text        String
+  type        String
+  required    Boolean
+  options     Option[]
+  quiz        Quiz       @relation(fields: [quizId], references: [id])
+  quizId      Int
 }
 
 model Option {
-  id         Int      @id @default(autoincrement())
-  text       String
+  id        Int       @id @default(autoincrement())
+  text      String
+  question  Question?  @relation(fields: [questionId], references: [id])
   questionId Int
-  question   Question @relation("QuestionOptions", fields: [questionId], references: [id])
 }

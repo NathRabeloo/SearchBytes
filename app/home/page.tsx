@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaQuestionCircle, FaPoll, FaRandom, FaChalkboardTeacher, FaTable, FaBook } from 'react-icons/fa';
-import Sidebar from '../components/Sidebar/Sidebar'; // Ajuste o caminho conforme necessário
 
 const Home = () => {
   const router = useRouter();
@@ -33,9 +32,58 @@ const Home = () => {
     }
   };
 
+  const handleMenuClick = (route) => {
+    router.push(route);
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif', backgroundColor: '#F0F4F8' }}>
-      <Sidebar /> {/* Inclui o Sidebar como componente lateral */}
+      <div style={{ width: '250px', backgroundColor: '#0084FF', color: '#F0F4F8', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: '#60A5FA', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <span style={{ fontSize: '24px', color: '#fff' }}>👤</span>
+            </div>
+            <p style={{ marginTop: '10px' }}>Meu Perfil</p>
+          </div>
+
+          <nav>
+            <ul style={{ listStyleType: 'none', padding: '0' }}>
+              <li style={{ marginBottom: '20px' }}>
+                <button onClick={() => handleMenuClick('/home')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <span style={{ marginRight: '10px' }}>🏠</span>
+                  Home
+                </button>
+              </li>
+              <li style={{ marginBottom: '20px' }}>
+                <button onClick={() => handleMenuClick('/perfil')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <span style={{ marginRight: '10px' }}>👤</span>
+                  Perfil
+                </button>
+              </li>
+              <li style={{ marginBottom: '20px' }}>
+                <button onClick={() => handleMenuClick('/relatorios')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <span style={{ marginRight: '10px' }}>📊</span>
+                  Relatórios
+                </button>
+              </li>
+              <li style={{ marginBottom: '20px' }}>
+                <button onClick={() => handleMenuClick('/configuracoes')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <span style={{ marginRight: '10px' }}>🛠</span>
+                  Configurações
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div>
+          <button onClick={() => handleMenuClick('/sair')} style={{ color: '#F0F4F8', textDecoration: 'none', display: 'flex', alignItems: 'center', fontSize: '18px', background: 'none', border: 'none', cursor: 'pointer' }}>
+            <span style={{ marginRight: '10px' }}>🚪</span>
+            Sair
+          </button>
+        </div>
+      </div>
 
       <div style={{ flex: 1, backgroundColor: '#EFF6FF', padding: '40px', color: '#1F2937' }}>
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '40px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>

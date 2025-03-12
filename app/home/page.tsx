@@ -1,28 +1,40 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { FaQuestionCircle, FaPoll, FaRandom, FaChalkboardTeacher, FaTable, FaBook } from 'react-icons/fa';
-import Sidebar from '../components/Sidebar/Sidebar'; // Ajuste o caminho conforme necessário
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  FaQuestionCircle,
+  FaPoll,
+  FaRandom,
+  FaChalkboardTeacher,
+  FaTable,
+  FaBook,
+  FaTachometerAlt,
+  FaCalendarAlt,
+  FaClipboardList,
+  FaSearch,
+} from "react-icons/fa";
+import Sidebar from "../components/Sidebar/Sidebar"; // Ajuste o caminho conforme necessário
 
 const Home = () => {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredItems, setFilteredItems] = useState([]);
 
   const items = [
-    { name: 'Quizzes', icon: <FaQuestionCircle size={40} />, route: '/quiz' },
-    { name: 'Enquetes', icon: <FaPoll size={40} />, route: '/enquete' },
-    { name: 'Sorteador', icon: <FaRandom size={40} />, route: '/sorteador' },
-    { name: 'Tutoriais', icon: <FaChalkboardTeacher size={40} />, route: '/tutoriais' },
-    { name: 'Modelos de Planilhas', icon: <FaTable size={40} />, route: '/modelos' },
-    { name: 'Bibliografia', icon: <FaBook size={40} />, route: '/bibliografia' },
+    { name: "Dashboard", icon: <FaTachometerAlt size={40} />, route: "/dashboard" },
+    { name: "Calendário", icon: <FaCalendarAlt size={40} />, route: "/calendario" },
+    { name: "Plano de aulas", icon: <FaClipboardList size={40} />, route: "/plano-aulas" },
+    { name: "Quizzes", icon: <FaQuestionCircle size={40} />, route: "/quiz" },
+    { name: "Enquetes", icon: <FaPoll size={40} />, route: "/enquete" },
+    { name: "Sorteador", icon: <FaRandom size={40} />, route: "/sorteador" },
+    { name: "Tutoriais", icon: <FaChalkboardTeacher size={40} />, route: "/tutoriais" },
+    { name: "Modelos de Planilhas", icon: <FaTable size={40} />, route: "/modelos" },
+    { name: "Bibliografia", icon: <FaBook size={40} />, route: "/bibliografia" },
   ];
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleSearch = (e) => {
-    e.preventDefault();
-    const filtered = items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
-    setFilteredItems(filtered);
+    setSearchQuery(e.target.value); // Atualiza o valor da pesquisa
   };
 
   const handleButtonClick = (item) => {
@@ -33,72 +45,74 @@ const Home = () => {
     }
   };
 
+  // Filtra os itens com base na pesquisa
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Debug: Log para verificar se filteredItems está sendo corretamente filtrado
+  console.log("Filtered Items: ", filteredItems);
+
   return (
-    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif', backgroundColor: '#F0F4F8' }}>
-      <Sidebar /> {/* Inclui o Sidebar como componente lateral */}
+    <div className="flex h-screen font-sans bg-gray-100">
+      <Sidebar />
 
-      <div style={{ flex: 1, backgroundColor: '#EFF6FF', padding: '40px', color: '#1F2937' }}>
-        <div style={{ backgroundColor: '#FFFFFF', borderRadius: '12px', padding: '40px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-          <h1 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '2.5rem', color: '#0084FF' }}>Teacher Desk</h1>
-
-          <form onSubmit={handleSearch} style={{ marginBottom: '40px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontSize: '18px', color: '#1F2937' }}>Pesquisar</label>
+      <div className="flex-1 bg-blue-50 p-10 text-gray-900">
+        {/* Seção de Boas-Vindas */}
+        <div className="flex flex-col items-center gap-6 p-6 bg-[#E8F0FE] min-h-screen">
+          {/* Barra de pesquisa */}
+          <div className="relative w-full max-w-md mb-10">
+            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#5A9BF6]" size={20} />
             <input
               type="text"
-              placeholder="Digite o que procura"
+              placeholder="Digite que deseja..."
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-[#E2EAF8] text-[#5A9BF6] placeholder-[#5A9BF6] focus:outline-none"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '1px solid #D1D5DB',
-                marginBottom: '20px',
-                fontSize: '16px',
-                backgroundColor: '#F9FAFB'
-              }}
+              onChange={handleSearch} // Chama a função de pesquisa
             />
-            <button
-              type="submit"
-              style={{
-                padding: '12px 24px',
-                backgroundColor: '#0084FF',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '16px',
-                transition: 'background-color 0.3s ease',
-              }}
-            >
-              Buscar
-            </button>
-          </form>
+          </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', marginTop: '40px' }}>
-            {(filteredItems.length > 0 ? filteredItems : items).map((item, index) => (
-              <div key={index}
-                style={{
-                  backgroundColor: '#E5F0FF',
-                  padding: '30px',
-                  borderRadius: '12px',
-                  width: 'calc(33% - 20px)',
-                  color: '#0084FF',
-                  textAlign: 'center',
-                  fontSize: '18px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s ease, background-color 0.3s ease',
-                }}
-                onClick={() => handleButtonClick(item)}
-              >
-                <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60px' }}>
-                  {item.icon}
+          {/* Seção de boas-vindas com tamanho maior */}
+          <div className="w-full max-w-7xl h-96 bg-[#5A9BF6] p-10 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative">
+            <div className="flex-1 text-left">
+              <p className="text-sm">16 janeiro de 2025</p>
+              <h1 className="text-5xl font-bold">Bem-vindo(a), Cris!</h1>
+              <button className="mt-6 bg-[#4A86E8] px-10 py-2 rounded-full text-white flex items-center gap-2 hover:bg-[#3B76D4]">
+                Tutorial TeacherDesk →
+              </button>
+            </div>
+
+            {/* A imagem do usuário agora ocupa toda a altura da seção e está alinhada à direita */}
+            <img
+              src="/avatar_ruiva.png" // Ajuste o nome do arquivo conforme necessário
+              alt="Avatar Ruiva"
+              className="absolute right-0 bottom-0 h-full object-cover" // Classe para fazer a imagem ocupar a altura e ficar à direita
+            />
+          </div>
+
+
+          {/* Botões das opções */}
+          <div className="grid grid-cols-3 gap-6 mt-10 w-full"> {/* Ajuste da largura e ocupação */}
+            {/* Verificando se há itens filtrados */}
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-blue-200 p-6 rounded-lg text-center text-blue-800 cursor-pointer hover:bg-blue-300 transition transform hover:scale-105"
+                  onClick={() => handleButtonClick(item)}
+                >
+                  <div className="mb-2 flex justify-center items-center h-12">
+                    {item.icon}
+                  </div>
+                  <p className="font-semibold">{item.name}</p>
                 </div>
-                <p style={{ fontWeight: 'bold' }}>{item.name.toUpperCase()}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="col-span-3 text-center text-gray-500">Nenhum item encontrado.</p>
+            )}
           </div>
         </div>
+
       </div>
     </div>
   );

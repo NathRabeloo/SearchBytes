@@ -14,7 +14,7 @@ import {
   FaClipboardList,
   FaSearch,
 } from "react-icons/fa";
-import Sidebar from "../components/Sidebar/Sidebar"; 
+import Sidebar from "../components/Sidebar"; 
 
 const Home = () => {
   const router = useRouter();

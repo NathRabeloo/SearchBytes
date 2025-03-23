@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="h-screen w-64 bg-[#60A5FA] text-[#EFF2F4] rounded-[30px] flex flex-col items-center p-6 shadow-lg">
     <h1 className="mb-6">
-        <img src="/teacher_desk_logo.png" alt="Teacher Desk Logo" className="w-50 h-auto" />
+        <img src="/assets/teacher_desk_logo.png" alt="Teacher Desk Logo" className="w-50 h-auto" />
       </h1>
       <hr className="w-full border-gray-300 mb-6" />
       <nav className="flex flex-col w-full space-y-4">

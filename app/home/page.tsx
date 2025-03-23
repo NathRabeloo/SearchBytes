@@ -9,26 +9,26 @@ import {
   FaChalkboardTeacher,
   FaTable,
   FaBook,
-  FaTachometerAlt,
+  FaFileAlt,
   FaCalendarAlt,
   FaClipboardList,
   FaSearch,
 } from "react-icons/fa";
-import Sidebar from "../components/Sidebar/Sidebar"; // Ajuste o caminho conforme necessário
+import Sidebar from "../components/Sidebar/Sidebar"; 
 
 const Home = () => {
   const router = useRouter();
 
   const items = [
-    { name: "Dashboard", icon: <FaTachometerAlt size={40} />, route: "/dashboard" },
-    { name: "Calendário", icon: <FaCalendarAlt size={40} />, route: "/calendario" },
-    { name: "Plano de aulas", icon: <FaClipboardList size={40} />, route: "/plano-aulas" },
-    { name: "Quizzes", icon: <FaQuestionCircle size={40} />, route: "/quiz" },
-    { name: "Enquetes", icon: <FaPoll size={40} />, route: "/enquete" },
-    { name: "Sorteador", icon: <FaRandom size={40} />, route: "/sorteador" },
-    { name: "Tutoriais", icon: <FaChalkboardTeacher size={40} />, route: "/tutoriais" },
-    { name: "Modelos de Planilhas", icon: <FaTable size={40} />, route: "/modelos" },
-    { name: "Bibliografia", icon: <FaBook size={40} />, route: "/bibliografia" },
+    { name: "Relatórios", icon: <FaFileAlt size={40} />, route: "/relatorios", description:"Gerencie participação e desempenho com gráficos e relatórios de participação" },
+    { name: "Calendário", icon: <FaCalendarAlt size={40} />, route: "/calendario",  description:"Gerencie seus compromissos em sala de aula com o Calendário" },
+    { name: "Diário de Plano de aulas", icon: <FaClipboardList size={40} />, route: "/plano-aulas", description:"Gerencie seu plano de aulas, totalmente personalizável"},
+    { name: "Quizzes", icon: <FaQuestionCircle size={40} />, route: "/quiz", description:"Crie Quizzes para seus alunos" },
+    { name: "Enquetes", icon: <FaPoll size={40} />, route: "/enquete", description:"Faça uma votação em sala de aula em conjunto com os alunos" },
+    { name: "Sorteador", icon: <FaRandom size={40} />, route: "/sorteador", description:"Sorteie grupos, alunos ou números" },
+    { name: "Tutoriais", icon: <FaChalkboardTeacher size={40} />, route: "/tutoriais",description:"Veja tutoriais disponíveis na nossa plataforma para facilitar o dia a dia" },
+    { name: "Modelos", icon: <FaTable size={40} />, route: "/modelos", description:"Acesse modelos de planilha e de slides personalizados para a Fatec" },
+    { name: "Bibliografia", icon: <FaBook size={40} />, route: "/bibliografia", description:"Adicione link de livros e sites para seus alunos"},
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,6 +54,7 @@ const Home = () => {
   console.log("Filtered Items: ", filteredItems);
 
   return (
+
     <div className="flex h-screen font-sans bg-gray-100">
       <Sidebar />
 
@@ -73,37 +74,50 @@ const Home = () => {
           </div>
 
           {/* Seção de boas-vindas com tamanho maior */}
-          <div className="w-full max-w-7xl h-96 bg-[#5A9BF6] p-10 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative">
+          <div className="w-full max-w-8xl h-96 bg-[#5A9BF6] p-10 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative">
             <div className="flex-1 text-left">
               <p className="text-sm">16 janeiro de 2025</p>
               <h1 className="text-5xl font-bold">Bem-vindo(a), Cris!</h1>
               <button className="mt-6 bg-[#4A86E8] px-10 py-2 rounded-full text-white flex items-center gap-2 hover:bg-[#3B76D4]">
-                Tutorial TeacherDesk →
+             Saiba mais sobre o TeacherDesk →
               </button>
             </div>
 
-            {/* A imagem do usuário agora ocupa toda a altura da seção e está alinhada à direita */}
             <img
-              src="/avatar_ruiva.png" // Ajuste o nome do arquivo conforme necessário
+              src="/assets/avatar_ruiva.png" 
               alt="Avatar Ruiva"
-              className="absolute right-0 bottom-0 h-full object-cover" // Classe para fazer a imagem ocupar a altura e ficar à direita
+              className="absolute right-96 bottom-0 h-full object-cover" 
+            />
+
+            <img
+              src="/assets/mesa_professora_ruiva.png" 
+              alt="Mesa Teacher Desk"
+              className="absolute right-0 bottom-0 h-full object-cover translate-y-24" 
             />
           </div>
 
 
           {/* Botões das opções */}
-          <div className="grid grid-cols-3 gap-6 mt-10 w-full"> {/* Ajuste da largura e ocupação */}
+          <div className="grid grid-cols-3 gap-6 mt-10 w-full">
             {/* Verificando se há itens filtrados */}
             {filteredItems.length > 0 ? (
               filteredItems.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-blue-200 p-6 rounded-lg text-center text-blue-800 cursor-pointer hover:bg-blue-300 transition transform hover:scale-105"
+                  className="relative group bg-blue-200 p-6 rounded-lg text-center text-blue-800 cursor-pointer hover:bg-blue-300 transition transform hover:scale-105"
                   onClick={() => handleButtonClick(item)}
                 >
+                  {/* Tooltip */}
+                  <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 text-sm bg-black text-white p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {item.description}
+                  </span>
+
+                  {/* Ícone */}
                   <div className="mb-2 flex justify-center items-center h-12">
                     {item.icon}
                   </div>
+
+                  {/* Nome do item */}
                   <p className="font-semibold">{item.name}</p>
                 </div>
               ))
@@ -112,7 +126,6 @@ const Home = () => {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

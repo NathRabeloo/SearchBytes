@@ -1,8 +1,5 @@
-// components/Sidebar.tsx
-"use client";
-
-import React from "react";
 import { useRouter } from "next/navigation";
+import { FaHome, FaUser, FaCog, FaBell, FaMoon, FaSignOutAlt } from "react-icons/fa";
 
 interface MenuItem {
   name: string;
@@ -14,10 +11,10 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
 
   const menuItems: MenuItem[] = [
-    { name: "Home", icon: "🏠", route: "/home" },
-    { name: "Perfil", icon: "👤", route: "/perfil" },
-    { name: "Relatórios", icon: "📊", route: "/relatorios" },
-    { name: "Configurações", icon: "🛠", route: "/configuracoes" },
+    { name: "Página Principal", icon: <FaHome />, route: "/home" },
+    { name: "Meu Perfil", icon: <FaUser />, route: "/profile" },
+    { name: "Configurações", icon: <FaCog />, route: "/settings" },
+    { name: "Notificações", icon: <FaBell />, route: "/notifications" },
   ];
 
   const handleMenuClick = (route: string) => {
@@ -25,78 +22,32 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "250px",
-        backgroundColor: "#0084FF",
-        color: "#F0F4F8",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <div>
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div
-            style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              backgroundColor: "#60A5FA",
-              margin: "0 auto",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+    <div className="h-screen w-64 bg-[#60A5FA] text-[#EFF2F4] rounded-[30px] flex flex-col items-center p-6 shadow-lg">
+    <h1 className="mb-6">
+        <img src="/assets/teacher_desk_logo.png" alt="Teacher Desk Logo" className="w-50 h-auto" />
+      </h1>
+      <hr className="w-full border-gray-300 mb-6" />
+      <nav className="flex flex-col w-full space-y-4">
+        {menuItems.map((item) => (
+          <button
+            key={item.name}
+            onClick={() => handleMenuClick(item.route)}
+            className="flex items-center p-3 hover:bg-blue-400 rounded-lg text-center w-full"
           >
-            <span style={{ fontSize: "24px", color: "#fff" }}>👤</span>
-          </div>
-          <p style={{ marginTop: "10px" }}>Meu Perfil</p>
-        </div>
-
-        <nav>
-          <ul style={{ listStyleType: "none", padding: "0" }}>
-            {menuItems.map((item, index) => (
-              <li key={index} style={{ marginBottom: "20px" }}>
-                <button
-                  onClick={() => handleMenuClick(item.route)}
-                  style={{
-                    color: "#F0F4F8",
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "18px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <span style={{ marginRight: "10px" }}>{item.icon}</span>
-                  {item.name}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-
-      <div>
+            {item.icon} <span className="ml-2">{item.name}</span>
+          </button>
+        ))}
+      </nav>
+      <hr className="w-full border-gray-300 my-6" />
+      <div className="flex flex-col w-full space-y-4">
+        <button className="flex items-center p-3 hover:bg-blue-400 rounded-lg text-center w-full">
+          <FaMoon className="mr-2" /> Dark Mode <span className="ml-auto bg-gray-200 px-3 py-1 rounded-full text-gray-700">OFF</span>
+        </button>
         <button
-          onClick={() => handleMenuClick("/sair")}
-          style={{
-            color: "#F0F4F8",
-            textDecoration: "none",
-            display: "flex",
-            alignItems: "center",
-            fontSize: "18px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-          }}
+          onClick={() => handleMenuClick("/logout")}
+          className="flex items-center p-3 hover:bg-blue-400 rounded-lg text-center w-full"
         >
-          <span style={{ marginRight: "10px" }}>🚪</span>
-          Sair
+          <FaSignOutAlt className="mr-2" /> Sair Do Site
         </button>
       </div>
     </div>

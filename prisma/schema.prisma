@@ -16,28 +16,3 @@ model User {
   name     String
   createdAt DateTime @default(now())
 }
-model Quiz {
-  id          Int        @id @default(autoincrement())
-  title       String
-  description String
-  questions   Question[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
-model Question {
-  id          Int        @id @default(autoincrement())
-  text        String
-  type        String
-  required    Boolean
-  options     Option[]
-  quiz        Quiz       @relation(fields: [quizId], references: [id])
-  quizId      Int
-}
-
-model Option {
-  id        Int       @id @default(autoincrement())
-  text      String
-  question  Question?  @relation(fields: [questionId], references: [id])
-  questionId Int
-}

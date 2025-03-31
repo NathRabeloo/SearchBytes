@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
     "formidable": "^3.5.2",
-    "next": "^14.2.7",
+    "next": "^15.2.3",
     "next-auth": "^4.24.7",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.0.1",

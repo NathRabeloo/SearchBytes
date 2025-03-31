@@ -16,3 +16,35 @@ model User {
   name     String
   createdAt DateTime @default(now())
 }
+
+model Enquete {
+  id          Int       @id @default(autoincrement())
+  titulo      String
+  disciplina  String
+  perguntas  Pergunta[] // Relacionamento 1:N com Pergunta
+}
+
+model Pergunta {
+  id         Int      @id @default(autoincrement())
+  pergunta   String
+  respostas  Resposta[] // Relacionamento 1:N com Resposta
+  enqueteId  Int
+  enquete    Enquete  @relation(fields: [enqueteId], references: [id]) // Relacionamento com Enquete
+}
+
+model Resposta {
+  id         Int      @id @default(autoincrement())
+  resposta   String
+  perguntaId Int
+  pergunta   Pergunta @relation(fields: [perguntaId], references: [id]) // Relacionamento com Pergunta
+  votos      Voto[]    @relation("RespostaVotos") // Relacionamento 1:N com Voto (agora com nome da relação)
+}
+
+model Voto {
+  id         Int      @id @default(autoincrement())
+  respostaId Int
+  resposta   Resposta @relation(fields: [respostaId], references: [id], name: "RespostaVotos") // Relacionamento com Resposta
+  criadoEm   DateTime @default(now()) // Data e hora do voto
+  // A linha abaixo foi adicionada para garantir que um único voto por resposta seja permitido
+  @@unique([respostaId, criadoEm]) // Isto garante que o mesmo voto não seja duplicado
+}

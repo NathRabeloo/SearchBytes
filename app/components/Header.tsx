@@ -8,7 +8,7 @@ interface HeaderProps {
   title?: string;
   buttonText?: string;
   buttonLink?: string;
-  imageSrc?: string; // Nova propriedade para imagem personalizada
+  imageSrc?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ date, title, buttonText, buttonLink, imageSrc }) => {
@@ -38,45 +38,48 @@ const Header: React.FC<HeaderProps> = ({ date, title, buttonText, buttonLink, im
   };
 
   return (
-    <div className="w-full max-w-8xl h-48 bg-[#5A9BF6] dark:bg-dark-primary p-10 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative">
-      <div className="flex-1 text-left space-y-4">
-        <p className="text-lg">{date}</p>
-        <h1 className="text-4xl font-bold">
+    <div className="w-full max-w-8xl h-auto min-h-[120px] md:min-h-[140px] bg-[#5A9BF6] dark:bg-dark-primary p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
+      
+      <div className="w-[60%] text-left space-y-1 md:space-y-2 z-10">
+        <p className="text-xs md:text-sm">{date}</p>
+        <h1 className="text-xl md:text-2xl font-bold">
           {title ? title.replace("{userName}", userName) : `Bem-vinde, ${userName}!`}
         </h1>
 
         <button
-          className="mt-4 bg-[#4A86E8] dark:bg-dark-accent px-10 py-3 rounded-xl text-white flex items-center gap-3 hover:bg-[#3B76D4] dark:hover:bg-blue-600"
+          className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-accent px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-blue-600 text-xs md:text-sm"
           onClick={handleButtonClick}
         >
           {buttonText}
         </button>
       </div>
 
-      {/* Exibir imagem personalizada se existir */}
-    {/* Exibir imagem personalizada se existir, ou nada se imageSrc for null/undefined */}
-{imageSrc ? (
-  <img
-    src={imageSrc}
-    alt="Imagem personalizada"
-    className="absolute right-1/2 translate-x-1/2 bottom-0 h-full object-cover"
-  />
-) : title !== "Bibliografia" && (
-  // Imagens padrão do Header, exceto na página Bibliografia
-  <>
-    <img
-      src="/assets/avatar_ruiva.png"
-      alt="Avatar Ruiva"
-      className="absolute right-80 bottom-0 h-full object-cover"
-    />
-    <img
-      src="/assets/mesa_professora_ruiva.png"
-      alt="Mesa Teacher Desk"
-      className="absolute right-10 bottom-0 h-full object-cover translate-y-8"
-    />
-  </>
-)}
+      {/* Imagens apenas para desktop */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt="Imagem personalizada"
+            className="absolute right-10 bottom-[-20px] max-h-[160px] object-contain"
+          />
+        ) : title !== "Bibliografia" && (
+          <>
+            {/* Avatar centralizado */}
+            <img
+              src="/assets/avatar_ruiva.png"
+              alt="Avatar Ruiva"
+              className="absolute left-1/2 -translate-x-1/2 bottom-[-0px] max-h-[160px] object-contain"
+            />
 
+            {/* Mesa à direita */}
+            <img
+              src="/assets/mesa_professora_ruiva.png"
+              alt="Mesa Teacher Desk"
+              className="absolute right-10 bottom-[-10px] max-h-[160px] object-contain"
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };

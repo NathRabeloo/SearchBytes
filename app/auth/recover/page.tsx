@@ -15,7 +15,7 @@ export default function RecoverPage() {
   return (
     <div className="flex min-h-screen" 
     style={{ 
-      backgroundImage: 'url(/assets/fatec-sorocaba.jpeg)', 
+      backgroundImage: 'url(/assets/FrenteFatec.jpg)', 
       backgroundSize: 'cover', 
       backgroundPosition: 'center' 
     }}>

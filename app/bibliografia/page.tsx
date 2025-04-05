@@ -18,7 +18,6 @@ import {
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
-import FeatureGrid from "../components/FeatureGrid";
 import Footer from "../components/Footer";
 
 interface Item {
@@ -41,7 +40,7 @@ const Home = () => {
   const userName = "Cris";
 
   const items: Item[] = [
-    { name: "Quizzes", icon: <FaQuestionCircle size={30} />, route: "/quizzes", description: "Crie Quizzes para seus alunos" },
+    { name: "Quizzes", icon: <FaQuestionCircle size={30} />, route: "/quiz", description: "Crie Quizzes para seus alunos" },
     { name: "Enquetes", icon: <FaPoll size={30} />, route: "/enquete", description: "Faça uma votação em sala de aula" },
     { name: "Relatórios", icon: <FaFileAlt size={30} />, route: "/relatorios", description: "Gerencie participação com relatórios" },
     { name: "Sorteador", icon: <FaRandom size={30} />, route: "/sorteador", description: "Sorteie grupos, alunos ou números" },
@@ -81,14 +80,13 @@ const Home = () => {
   
             {/* Cabeçalho com boas-vindas */}
             <Header 
-  date={currentDate}
-  title={`Bem-vinde, ${userName}!`}
-  buttonText="Tutorial TeacherDesk →"
-  buttonLink="/tutorial"
+  date={currentDate} 
+  title="Bibliografia" 
+  buttonText="Adicionar →" 
+  buttonLink="/adicionar"
+  imageSrc={undefined}
 />
-  
-            {/* Grid de funcionalidades */}
-            <FeatureGrid items={filteredItems} onItemClick={handleItemClick} />
+
           </div>
         </div>
       </div>

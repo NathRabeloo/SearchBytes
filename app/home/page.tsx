@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   FaQuestionCircle,
@@ -11,10 +11,9 @@ import {
   FaBook,
   FaFileAlt,
   FaCalendarAlt,
-  FaClipboardList
+  FaClipboardList,
 } from "react-icons/fa";
 
-// Importando os componentes
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
@@ -31,9 +30,7 @@ interface Item {
 const Home = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Data atual formatada
   const currentDate = new Date().toLocaleDateString("pt-BR", {
     day: "numeric",
     month: "long",
@@ -58,15 +55,7 @@ const Home = () => {
   };
 
   const handleItemClick = (item: Item) => {
-    if (item.route) {
-      router.push(item.route);
-    } else {
-      alert(`Você clicou em ${item.name}`);
-    }
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    router.push(item.route);
   };
 
   const filteredItems = items.filter((item) =>
@@ -76,29 +65,15 @@ const Home = () => {
   return (
     <div className="flex flex-col min-h-screen h-screen max-h-screen font-sans bg-gray-100 dark:bg-dark-primary">
       <div className="flex flex-1">
-        {/* Botão toggle para sidebar em telas menores */}
-        <div className="md:hidden absolute top-4 left-4 z-10">
-          <button 
-            onClick={toggleSidebar}
-            className="p-2 bg-blue-500 text-white rounded-md"
-          >
-            {isSidebarOpen ? '←' : '→'}
-          </button>
-        </div>
-        
-        {/* Sidebar com visibilidade condicional em telas pequenas */}
-        <div className={`${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
-          <Sidebar />
-        </div>
-        
+        {/* Sidebar unificada responsiva */}
+        <Sidebar />
+
         <div className="flex flex-col flex-1">
           <div className="flex flex-col h-full p-2 md:p-4">
-            {/* Barra de pesquisa */}
             <div className="ml-0 md:ml-4 w-full mb-2">
               <SearchBar searchQuery={searchQuery} onSearchChange={handleSearch} />
             </div>
-            
-            {/* Cabeçalho com boas-vindas - altura reduzida */}
+
             <div className="mb-2">
               <Header 
                 date={currentDate}
@@ -110,17 +85,15 @@ const Home = () => {
                 mobileImage="/assets/avatar_ruiva.png"
               />
             </div>
-            
-            {/* Grid sem scroll */}
+
             <div className="flex-1 mb-2">
               <FeatureGrid items={filteredItems} onItemClick={handleItemClick} />
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Rodapé */}
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };

@@ -16,7 +16,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ name, icon, description, onCl
       onClick={onClick}
     >
       {/* Tooltip não clicável */}
-      <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 text-sm bg-black text-white p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
+      <span className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 text-sm bg-black text-white p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50">
         {description}
       </span>
 

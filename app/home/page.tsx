@@ -102,9 +102,12 @@ const Home = () => {
             <div className="mb-2">
               <Header 
                 date={currentDate}
-                title={`Bem-vinde, ${userName}!`}
+                title={`Bem-vindo, ${userName}!`}
                 buttonText="Tutorial TeacherDesk →"
                 buttonLink="/tutorial"
+                desktopImageLeft="/assets/avatar_ruiva.png"
+                desktopImageRight="/assets/mesa_professora_ruiva.png"
+                mobileImage="/assets/avatar_ruiva.png"
               />
             </div>
             

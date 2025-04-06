@@ -12,7 +12,7 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = ({ name, icon, description, onClick }) => {
   return (
     <div
-      className="relative group bg-blue-200 dark:bg-dark-card py-2 px-4 rounded-lg text-center text-blue-800 dark:text-dark-text cursor-pointer hover:bg-blue-300 dark:hover:bg-dark-hover transition transform hover:scale-105 flex flex-col items-center justify-center h-full"
+      className="relative group bg-blue-200 dark:bg-dark-card py-1 px-3 rounded-lg text-center text-blue-800 dark:text-dark-text cursor-pointer hover:bg-blue-300 dark:hover:bg-dark-hover transition transform hover:scale-105 flex flex-col items-center justify-center h-full"
       onClick={onClick}
     >
       {/* Tooltip não clicável */}
@@ -20,7 +20,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ name, icon, description, onCl
         {description}
       </span>
 
-      <div className="mb-1 flex justify-center items-center h-8 md:h-10 dark:text-dark-accent">
+      <div className="mb-2 flex justify-center items-center h-8 md:h-10 dark:text-dark-accent">
         {icon}
       </div>
 

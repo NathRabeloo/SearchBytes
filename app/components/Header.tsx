@@ -8,10 +8,22 @@ interface HeaderProps {
   title?: string;
   buttonText?: string;
   buttonLink?: string;
-  imageSrc?: string;
+  desktopImageLeft?: string;  // Imagem à esquerda em desktop
+  desktopImageRight?: string; // Imagem à direita em desktop (opcional)
+  mobileImage?: string;       // Imagem em dispositivos móveis
+  showOnlyLeftImage?: boolean; // Nova prop para mostrar apenas a imagem da esquerda
 }
 
-const Header: React.FC<HeaderProps> = ({ date, title, buttonText, buttonLink, imageSrc }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  date, 
+  title, 
+  buttonText, 
+  buttonLink, 
+  desktopImageLeft,
+  desktopImageRight,
+  mobileImage,
+  showOnlyLeftImage = false
+}) => {
   const router = useRouter();
   const [userName, setUserName] = useState<string>("Usuário");
 
@@ -38,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ date, title, buttonText, buttonLink, im
   };
 
   return (
-    <div className="w-full max-w-8xl h-auto min-h-[120px] md:min-h-[140px] bg-[#5A9BF6] dark:bg-dark-primary p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
+    <div className="w-full max-w-8xl h-auto min-h-[150px] md:min-h-[180px] bg-[#5A9BF6] dark:bg-dark-primary p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
       
       <div className="w-[60%] text-left space-y-1 md:space-y-2 z-10">
         <p className="text-xs md:text-sm">{date}</p>
@@ -46,38 +58,59 @@ const Header: React.FC<HeaderProps> = ({ date, title, buttonText, buttonLink, im
           {title ? title.replace("{userName}", userName) : `Bem-vinde, ${userName}!`}
         </h1>
 
-        <button
-          className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-accent px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-blue-600 text-xs md:text-sm"
-          onClick={handleButtonClick}
-        >
-          {buttonText}
-        </button>
+        {buttonText && (
+          <button
+            className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-accent px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-blue-600 text-xs md:text-sm"
+            onClick={handleButtonClick}
+          >
+            {buttonText}
+          </button>
+        )}
       </div>
 
-      {/* Imagens apenas para desktop */}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none">
-        {imageSrc ? (
+      {/* Imagem para mobile/tablet */}
+      <div className="block sm:block lg:hidden absolute inset-0 pointer-events-none">
+        {mobileImage && (
           <img
-            src={imageSrc}
-            alt="Imagem personalizada"
-            className="absolute right-10 bottom-[-20px] max-h-[160px] object-contain"
+            src={mobileImage}
+            alt="Imagem mobile"
+            className="absolute right-2 bottom-[0px] max-h-[140px] object-contain"
+          />
+        )}
+      </div>
+
+      {/* Imagens para desktop */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+        {/* Imagem à esquerda (personalizada ou padrão) */}
+        {desktopImageLeft ? (
+          <img
+            src={desktopImageLeft}
+            alt="Imagem à esquerda"
+            className={`absolute ${showOnlyLeftImage ? 'right-10' : 'left-1/2 -translate-x-1/2'} bottom-[-0px] max-h-[180px] object-contain`}
           />
         ) : title !== "Bibliografia" && (
-          <>
-            {/* Avatar centralizado */}
-            <img
-              src="/assets/avatar_ruiva.png"
-              alt="Avatar Ruiva"
-              className="absolute left-1/2 -translate-x-1/2 bottom-[-0px] max-h-[160px] object-contain"
-            />
+          <img
+            src="/assets/avatar_ruiva.png"
+            alt="Avatar Ruiva"
+            className={`absolute ${showOnlyLeftImage ? 'right-10' : 'left-1/2 -translate-x-1/2'} bottom-[-0px] max-h-[180px] object-contain`}
+          />
+        )}
 
-            {/* Mesa à direita */}
-            <img
-              src="/assets/mesa_professora_ruiva.png"
-              alt="Mesa Teacher Desk"
-              className="absolute right-10 bottom-[-10px] max-h-[160px] object-contain"
-            />
-          </>
+        {/* Imagem à direita (personalizada ou padrão) - somente exibida se showOnlyLeftImage for false */}
+        {!showOnlyLeftImage && desktopImageRight && (
+          <img
+            src={desktopImageRight}
+            alt="Imagem à direita"
+            className="absolute right-10 bottom-[-10px] max-h-[180px] object-contain"
+          />
+        )}
+        
+        {!showOnlyLeftImage && !desktopImageRight && title !== "Bibliografia" && (
+          <img
+            src="/assets/mesa_professora_ruiva.png"
+            alt="Mesa Teacher Desk"
+            className="absolute right-10 bottom-[-10px] max-h-[180px] object-contain"
+          />
         )}
       </div>
     </div>

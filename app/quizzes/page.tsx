@@ -79,13 +79,17 @@ const Home = () => {
             </div>
   
             {/* Cabeçalho com boas-vindas */}
-            <Header 
-  date={currentDate} 
-  title="Quizzes" 
-  buttonText="Criar um Quizz →" 
-  buttonLink="/quiz"
-  imageSrc="/assets/professora_denilce.png" // Nova imagem
-/>
+            <div className="mb-2">
+              <Header 
+                date={currentDate}
+                title="Quizzes" 
+                buttonText="Criar um Quizz →" 
+                buttonLink="/quiz"
+                desktopImageLeft="/assets/professora_denilce.png"
+                mobileImage="/assets/professora_denilce.png"
+                showOnlyLeftImage={true}
+              />
+            </div>
 
           </div>
         </div>

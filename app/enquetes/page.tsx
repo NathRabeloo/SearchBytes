@@ -9,7 +9,7 @@ import SearchBar from "@/components/SearchBar";
 import Footer from "@/components/Footer";
 
 
-const Quiz = () => {
+const Enquete = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -41,8 +41,8 @@ const Quiz = () => {
             {/* Cabeçalho com boas-vindas */}
             <Header 
   date={currentDate} 
-  title="Quizzes" 
-  buttonText="Criar um Quiz →" 
+  title="Enquetes" 
+  buttonText="Criar uma Enquete →" 
   buttonLink="/enquetes"
   imageSrc="/assets/professora_denilce.png" // Nova imagem
 />
@@ -56,4 +56,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
+export default Enquete;

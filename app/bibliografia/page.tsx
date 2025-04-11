@@ -15,10 +15,10 @@ import {
 } from "react-icons/fa";
 
 // Importando os componentes
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
-import SearchBar from "../components/SearchBar";
-import Footer from "../components/Footer";
+import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
+import SearchBar from "../../components/SearchBar";
+import Footer from "../../components/Footer";
 
 interface Item {
   name: string;

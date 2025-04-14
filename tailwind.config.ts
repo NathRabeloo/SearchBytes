@@ -29,6 +29,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        azulteacherdesk: {
+          50: '#eff6ff',
+          100: '#dbebfe',
+          200: '#bfdbfe',
+          300: '#93c2fd',
+          400: '#60a5fa',
+          500: '#3b8ff6',
+          600: '#257eeb',
+          700: '#1d71d8',
+          800: '#1e5faf',
+          900: '#1e4e8a',
+          950: '#173254',
+        },
+
+
         dark: {
           primary: '#1E2B3A',       // Fundo principal escuro
           secondary: '#0F1A2A',     // Barra lateral escura

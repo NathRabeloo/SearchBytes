@@ -39,7 +39,7 @@ const Home = () => {
   const userName = "Cris";
 
   const items: Item[] = [
-    { name: "Quizzes", icon: <FaQuestionCircle size={24} />, route: "/quizzes", description: "Crie Quizzes para seus alunos" },
+    { name: "Quiz", icon: <FaQuestionCircle size={24} />, route: "/quiz", description: "Crie Quiz para seus alunos" },
     { name: "Enquetes", icon: <FaPoll size={24} />, route: "/enquete", description: "Faça uma votação em sala de aula" },
     { name: "Relatórios", icon: <FaFileAlt size={24} />, route: "/relatorios", description: "Gerencie participação com relatórios" },
     { name: "Sorteador", icon: <FaRandom size={24} />, route: "/sorteador", description: "Sorteie grupos, alunos ou números" },

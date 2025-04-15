@@ -17,7 +17,7 @@ interface FeatureGridProps {
 
 const FeatureGrid: React.FC<FeatureGridProps> = ({ items, onItemClick }) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full h-full">
+    <div className="grid grid-cols-3 md:grid-cols-3 gap-5 w-full h-full">
       {items.length > 0 ? (
         items.map((item, index) => (
           <FeatureCard

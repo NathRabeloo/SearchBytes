@@ -10,48 +10,14 @@ interface DynamicFormProps {
     initialData?: any;
 }
 
-const WheelSpinner = ({ items, onComplete }: { items: string[]; onComplete: (item: string) => void }) => {
-    const [spinning, setSpinning] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
-    const spin = () => {
-        if (spinning || items.length === 0) return;
-
-        setSpinning(true);
-        const duration = 3000;
-        const chosen = items[Math.floor(Math.random() * items.length)];
-        setTimeout(() => {
-            setSelectedItem(chosen);
-            onComplete(chosen);
-            setSpinning(false);
-        }, duration);
-    };
-
-    return (
-        <div className="flex flex-col items-center justify-center mt-4">
-            <button
-                onClick={spin}
-                disabled={spinning}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg mb-4"
-            >
-                Sortear
-            </button>
-            <div className="h-16 w-full text-center text-xl font-bold transition-all duration-300 ease-in-out">
-                {spinning ? (
-                    <div className="animate-pulse text-yellow-300">Sorteando...</div>
-                ) : selectedItem ? (
-                    <div className="text-green-700 dark:text-green-300">🎉 {selectedItem} 🎉</div>
-                ) : null}
-            </div>
-        </div>
-    );
-};
-
 const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialData }) => {
     const [range, setRange] = useState({ min: initialData?.min || "", max: initialData?.max || "" });
     const [list, setList] = useState<string[]>(initialData?.list || [""]);
     const [question, setQuestion] = useState({ text: initialData?.text || "", answer: initialData?.answer || "" });
-    const [rangeResult, setRangeResult] = useState<number | null>(null);
+
+    const [shuffling, setShuffling] = useState(false);
+    const [shuffledValue, setShuffledValue] = useState("");
+    const [selectedResult, setSelectedResult] = useState("");
 
     const handleListChange = (index: number, value: string) => {
         const updated = [...list];
@@ -61,22 +27,51 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialDa
 
     const addListItem = () => setList([...list, ""]);
 
-    const handleRangeSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const min = parseInt(range.min);
-        const max = parseInt(range.max);
-        if (!isNaN(min) && !isNaN(max) && min <= max) {
-            const result = Math.floor(Math.random() * (max - min + 1)) + min;
-            setRangeResult(result);
-            onSubmit(result);
+    const shuffleAndSelect = (items: string[], onDone: (selected: string) => void) => {
+        setShuffling(true);
+        let count = 0;
+        const maxCount = 25;
+        const interval = setInterval(() => {
+            const randomItem = items[Math.floor(Math.random() * items.length)];
+            setShuffledValue(randomItem);
+            count++;
+            if (count >= maxCount) {
+                clearInterval(interval);
+                setShuffling(false);
+                setSelectedResult(randomItem);
+                onDone(randomItem);
+            }
+        }, 80);
+    };
+
+    const handleRangeDraw = () => {
+        const min = parseInt(range.min, 10);
+        const max = parseInt(range.max, 10);
+
+        if (isNaN(min) || isNaN(max) || min > max) {
+            alert("Por favor, insira valores válidos para mínimo e máximo.");
+            return;
         }
+
+        const possibleNumbers = Array.from({ length: max - min + 1 }, (_, i) => (min + i).toString());
+        shuffleAndSelect(possibleNumbers, onSubmit);
+    };
+
+    const handleListDraw = () => {
+        const validItems = list.filter((item) => item.trim() !== "");
+        if (validItems.length === 0) {
+            alert("Adicione pelo menos um item à lista.");
+            return;
+        }
+        shuffleAndSelect(validItems, onSubmit);
     };
 
     return (
         <form
-            onSubmit={handleRangeSubmit}
-            className="w-full h-full max-w-3xl bg-[#5A9BF6] dark:bg-dark-primary text-white p-4 md:p-6 rounded-2xl shadow-lg flex flex-col gap-4"
+            onSubmit={(e) => e.preventDefault()}
+            className="w-full max-w-3xl bg-[#5A9BF6] dark:bg-dark-primary text-white p-4 md:p-6 rounded-2xl shadow-lg flex flex-col gap-4"
         >
+            {/* Range Mode */}
             {formType === "range" && (
                 <>
                     <div>
@@ -99,51 +94,48 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialDa
                     </div>
 
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleRangeDraw}
                         className="mt-2 bg-[#4A86E8] hover:bg-[#3B76D4] px-4 py-2 rounded-lg text-white font-semibold"
                     >
-                        Sortear
+                        Sortear Número
                     </button>
-
-                    {rangeResult !== null && (
-                        <div className="text-center text-xl font-bold mt-2 text-yellow-300">
-                            🎉 Número sorteado: {rangeResult}
-                        </div>
-                    )}
                 </>
             )}
 
+            {/* List Mode */}
             {formType === "list" && (
-                <div>
+                <>
                     <label className="text-sm block mb-1">Lista de Itens:</label>
-                    <div className="max-h-[300px] overflow-y-auto">
-                        {list.map((item, index) => (
-                            <input
-                                key={index}
-                                type="text"
-                                value={item}
-                                onChange={(e) => handleListChange(index, e.target.value)}
-                                className=" px-3 py-2 rounded-lg text-black mb-2 mx-2"
-                                placeholder={`Item ${index + 1}`}
-                            />
-
-                        ))}
-                    </div>
+                    {list.map((item, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            value={item}
+                            onChange={(e) => handleListChange(index, e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg text-black mb-2"
+                            placeholder={`Item ${index + 1}`}
+                        />
+                    ))}
                     <button
                         type="button"
                         onClick={addListItem}
-                        className="bg-[#4A86E8] hover:bg-[#3B76D4] px-4 py-2 rounded-lg text-white text-sm mt-3"
+                        className="bg-[#4A86E8] hover:bg-[#3B76D4] px-4 py-2 rounded-lg text-white text-sm"
                     >
                         + Adicionar item
                     </button>
 
-                    <WheelSpinner
-                        items={list.filter((item) => item.trim() !== "")}
-                        onComplete={(winner) => onSubmit(winner)}
-                    />
-                </div>
+                    <button
+                        type="button"
+                        onClick={handleListDraw}
+                        className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-white font-semibold"
+                    >
+                        Sortear da Lista
+                    </button>
+                </>
             )}
 
+            {/* Question mode - mantido para outros usos */}
             {formType === "question" && (
                 <>
                     <div>
@@ -167,6 +159,18 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialDa
                         />
                     </div>
                 </>
+            )}
+
+            {/* Área do Resultado */}
+            {shuffling && (
+                <div className="mt-6 text-center text-3xl font-bold animate-pulse">
+                    {shuffledValue}
+                </div>
+            )}
+            {!shuffling && selectedResult && (
+                <div className="mt-6 text-center text-4xl font-bold text-azulteacherdesk-900 transition-all duration-500">
+                    🎉 {selectedResult} 🎉
+                </div>
             )}
         </form>
     );

@@ -79,7 +79,7 @@ const Home = () => {
                 date={currentDate}
                 title={`Bem-vindo, ${userName}!`}
                 buttonText="Tutorial TeacherDesk →"
-                buttonLink="/tutorial"
+                buttonLink="/tutoriais"
                 desktopImageLeft="/assets/avatar_ruiva.png"
                 desktopImageRight="/assets/mesa_professora_ruiva.png"
                 mobileImage="/assets/avatar_ruiva.png"

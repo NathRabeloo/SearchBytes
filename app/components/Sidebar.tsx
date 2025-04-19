@@ -6,8 +6,6 @@ import {
   FaBars, 
   FaHome, 
   FaUser, 
-  FaCog, 
-  FaBell, 
   FaSignOutAlt,
   FaMoon,
   FaSun
@@ -96,8 +94,6 @@ const Sidebar: React.FC = () => {
   const menuItems: MenuItem[] = [
     { name: "Página Principal", icon: <FaHome size={20} />, route: "/home" },
     { name: "Meu Perfil", icon: <FaUser size={20} />, route: "/perfil" },
-    { name: "Configurações", icon: <FaCog size={20} />, route: "/configuracoes" },
-    { name: "Notificações", icon: <FaBell size={20} />, route: "/notificacoes" },
   ];
 
   const handleMenuClick = (route: string) => {
@@ -107,6 +103,15 @@ const Sidebar: React.FC = () => {
       setIsExpanded(false);
       localStorage.setItem('sidebarState', 'collapsed');
     }
+  };
+  
+  // Função para realizar o logout
+  const handleLogout = () => {
+    // Limpar o token de autenticação ou qualquer outro dado de sessão
+    localStorage.removeItem('authToken'); 
+
+    // Redirecionar para a tela de login ou tela inicial
+    router.push("/auth/login");  // Redireciona para a tela de login
   };
 
   return (
@@ -181,7 +186,7 @@ const Sidebar: React.FC = () => {
 
         {/* Logout */}
         <button
-          onClick={() => handleMenuClick("/logout")}
+          onClick={handleLogout} 
           className="flex items-center w-full text-left p-3 hover:bg-blue-500 dark:hover:bg-dark-hover rounded-lg"
         >
           <div className={`w-8 h-8 flex items-center justify-center ${!isExpanded && 'mx-auto'}`}>

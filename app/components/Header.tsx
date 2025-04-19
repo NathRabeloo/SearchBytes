@@ -50,17 +50,17 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className="w-full max-w-8xl h-auto min-h-[150px] md:min-h-[180px] bg-[#5A9BF6] dark:bg-dark-primary p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
+    <div className="w-full max-w-8xl h-auto min-h-[150px] md:min-h-[180px] bg-[#5A9BF6] dark:bg-dark-header p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
       
       <div className="w-[60%] text-left space-y-1 md:space-y-2 z-10">
         <p className="text-xs md:text-sm">{date}</p>
         <h1 className="text-xl md:text-2xl font-bold">
-          {title ? title.replace("{userName}", userName) : `Bem-vinde, ${userName}!`}
+          {title ? title.replace("{userName}", userName) : `Bem-vindo, ${userName}!`}
         </h1>
 
         {buttonText && (
           <button
-            className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-accent px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-blue-600 text-xs md:text-sm"
+            className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-button px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-dark-hover text-xs md:text-sm"
             onClick={handleButtonClick}
           >
             {buttonText}

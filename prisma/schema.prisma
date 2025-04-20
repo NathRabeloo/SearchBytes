@@ -9,10 +9,156 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  name     String
-  createdAt DateTime @default(now())
+model Usuario {
+  id           String              @id @default(uuid())
+  nome         String
+  email        String              @unique
+  senha        String
+  createdAt    DateTime            @default(now())
+  disciplinas  CriadasDisciplina[]
+  eventos      Evento[]
+  sorteadores  Sorteador[]
+  enquetes     Enquete[]
+  quizzes      Quiz[]
+  tutoriais    Tutorial[]
+  modelos      Modelo[]
+  notificacoes Notificacao[]
+}
+
+model Disciplina {
+  id            String              @id @default(uuid())
+  nome          String
+  descricao     String?
+  usuarios      CriadasDisciplina[]
+  planos        PlanoAula[]
+  quizzes       Quiz[]
+  enquetes      Enquete[]
+  bibliografias Bibliografia[] 
+}
+
+model CriadasDisciplina {
+  id           String     @id @default(uuid())
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId    String
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId String
+
+  @@unique([usuarioId, disciplinaId])
+}
+
+model PlanoAula {
+  id           String     @id @default(uuid())
+  nome         String
+  descricao    String?
+  dataAula     DateTime
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId String
+}
+
+model Evento {
+  id        String   @id @default(uuid())
+  nome      String
+  data      DateTime
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId String
+}
+
+model Enquete {
+  id           String     @id @default(uuid())
+  nome         String
+  resultado    String?
+  qrCode       String?
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId    String
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId String
+  opcoes       Opcao[]
+}
+
+model Opcao {
+  id         String    @id @default(uuid())
+  texto      String
+  qtd        Int       @default(0)
+  enquete    Enquete   @relation(fields: [enqueteId], references: [id])
+  enqueteId  String
+  pergunta   Pergunta? @relation(fields: [perguntaId], references: [id])
+  perguntaId String?
+}
+
+model Quiz {
+  id           String     @id @default(uuid())
+  nome         String
+  qrCode       String?
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  disciplinaId String
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId    String
+  perguntas    Pergunta[]
+}
+
+model Pergunta {
+  id        String     @id @default(uuid())
+  enunciado String
+  quiz      Quiz       @relation(fields: [quizId], references: [id])
+  quizId    String
+  opcoes    Opcao[]
+  respostas Resposta[]
+}
+
+model Participante {
+  id        String     @id @default(uuid())
+  nome      String
+  respostas Resposta[]
+}
+
+model Resposta {
+  id             String       @id @default(uuid())
+  texto          String
+  correta        Boolean
+  pergunta       Pergunta     @relation(fields: [perguntaId], references: [id])
+  perguntaId     String
+  participante   Participante @relation(fields: [participanteId], references: [id])
+  participanteId String
+}
+
+model Sorteador {
+  id         String  @id @default(uuid())
+  nome       String
+  valores    String
+  resultados String?
+  usuario    Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId  String
+}
+
+model Tutorial {
+  id               String   @id @default(uuid())
+  nome             String
+  descricao        String?
+  arquivo          String?
+  criadoPorUsuario Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId        String?
+}
+
+model Modelo {
+  id               String   @id @default(uuid())
+  nome             String
+  arquivo          String
+  criadoPorUsuario Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId        String?
+}
+
+model Notificacao {
+  id        String   @id @default(uuid())
+  texto     String
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId String?
+}
+
+model Bibliografia {
+  id           String      @id @default(uuid())
+  nome         String
+  link         String
+  qrCode       String?
+  disciplina   Disciplina? @relation(fields: [disciplinaId], references: [id])
+  disciplinaId String?
 }

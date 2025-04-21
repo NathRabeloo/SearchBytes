@@ -88,6 +88,7 @@ const Home = () => {
                                 desktopImageLeft="/assets/professora_denilce.png"
                                 mobileImage="/assets/professora_denilce.png"
                                 showOnlyLeftImage={true}
+                                showButton={false}
                             />
                         </div>
 

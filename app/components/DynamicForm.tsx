@@ -205,7 +205,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialDa
                             onClick={() => fileInputRef.current?.click()}
                             className="bg-[#4A86E8] hover:bg-[#3B76D4] px-1 py-1 rounded-lg text-white text-sm"
                         >
-                            Selecionar Arquivo .TXT
+                            Selecionar o Arquivo .TXT
                         </button>
                     </div>
 

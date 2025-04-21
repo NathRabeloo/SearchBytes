@@ -86,10 +86,10 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({ items, onFinish }) => {
                     left: "70%",
                     zIndex: 50,
                     transform: "translate(50%, -50%) rotate(-90deg)", // Posiciona e rotaciona o ponteiro para a esquerda
-                    
+
                     borderLeft: "10px solid transparent",
                     borderRight: "10px solid transparent",
-                    borderBottom: "20px solid red", // Cor do ponteiro
+                    borderBottom: "20px solid blue", // Cor do ponteiro
                 }}
             ></div>
 

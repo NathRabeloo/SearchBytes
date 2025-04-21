@@ -31,7 +31,7 @@ interface Item {
 const Home = () => {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
-    const [formType, setFormType] = useState<"range" | "list">("range");
+    const [formType, setFormType] = useState<"range" | "list" | "arquivo">("range");
 
     // Data atual formatada
     const currentDate = new Date().toLocaleDateString("pt-BR", {
@@ -95,24 +95,34 @@ const Home = () => {
                         <div className="mb-4 flex gap-4 items-center">
                             <button
                                 onClick={() => setFormType("range")}
-                                className={`px-4 py-2 rounded-lg font-semibold transition ${
-                                    formType === "range"
-                                        ? "bg-blue-600 text-white"
-                                        : "bg-white text-blue-600 border border-blue-600"
-                                }`}
+                                className={`px-4 py-2 rounded-lg font-semibold transition ${formType === "range"
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-white text-blue-600 border border-blue-600"
+                                    }`}
                             >
                                 Sorteio por Números
                             </button>
+
                             <button
                                 onClick={() => setFormType("list")}
-                                className={`px-4 py-2 rounded-lg font-semibold transition ${
-                                    formType === "list"
-                                        ? "bg-blue-600 text-white"
-                                        : "bg-white text-blue-600 border border-blue-600"
-                                }`}
+                                className={`px-4 py-2 rounded-lg font-semibold transition ${formType === "list"
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-white text-blue-600 border border-blue-600"
+                                    }`}
                             >
                                 Sorteio por Lista
                             </button>
+
+                            <button
+                                onClick={() => setFormType("arquivo")}
+                                className={`px-4 py-2 rounded-lg font-semibold transition ${formType === "arquivo" // ✅ correto
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-white text-blue-600 border border-blue-600"
+                                    }`}
+                            >
+                                Sorteio com Base em Arquivo
+                            </button>
+
                         </div>
 
                         <div>

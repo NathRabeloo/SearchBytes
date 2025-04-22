@@ -12,6 +12,7 @@ interface HeaderProps {
   desktopImageRight?: string; // Imagem à direita em desktop (opcional)
   mobileImage?: string;       // Imagem em dispositivos móveis
   showOnlyLeftImage?: boolean; // Nova prop para mostrar apenas a imagem da esquerda
+  showButton?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -22,7 +23,8 @@ const Header: React.FC<HeaderProps> = ({
   desktopImageLeft,
   desktopImageRight,
   mobileImage,
-  showOnlyLeftImage = false
+  showOnlyLeftImage = false,
+  showButton = true
 }) => {
   const router = useRouter();
   const [userName, setUserName] = useState<string>("Usuário");
@@ -58,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({
           {title ? title.replace("{userName}", userName) : `Bem-vinde, ${userName}!`}
         </h1>
 
-        {buttonText && (
+        {buttonText && showButton && (
           <button
             className="mt-1 md:mt-2 bg-[#4A86E8] dark:bg-dark-accent px-3 md:px-6 py-1 md:py-2 rounded-lg text-white flex items-center gap-1 md:gap-2 hover:bg-[#3B76D4] dark:hover:bg-blue-600 text-xs md:text-sm"
             onClick={handleButtonClick}

@@ -2,7 +2,7 @@
 
 import Header from "../components/Header";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/utils/supabase/server";
 import { redirect } from 'next/navigation';
 
 import Grid from "../components/Grid";

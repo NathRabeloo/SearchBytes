@@ -6,6 +6,10 @@ import { FaQrcode } from "react-icons/fa6";
 import { createClient } from "@supabase/supabase-js";
 import SearchBar from "./SearchBar";
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 interface Quiz {
   id: string;
   title: string;
@@ -17,11 +21,6 @@ interface QuizListProps {
   onCreateQuiz: () => void;
   onEditQuiz: (quizId: string) => void;
 }
-
-// Configure o Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const QuizList: React.FC<QuizListProps> = ({ onCreateQuiz, onEditQuiz }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -42,9 +41,7 @@ const QuizList: React.FC<QuizListProps> = ({ onCreateQuiz, onEditQuiz }) => {
             id,
             titulo,
             created_at,
-            Disciplina (
-              nome
-            )
+            Disciplina ( nome )
           `)
           .is("deleted_at", null)
           .order("created_at", { ascending: false });
@@ -223,17 +220,6 @@ const QuizList: React.FC<QuizListProps> = ({ onCreateQuiz, onEditQuiz }) => {
                 ))}
               </tbody>
             </table>
-          </div>
-
-          <div className="py-3 px-4 border-t border-gray-200 dark:border-dark-border flex items-center justify-between">
-            <div className="flex gap-2">
-              <button className="px-3 py-1 bg-gray-200 dark:bg-dark-hover rounded">1</button>
-              <button className="px-3 py-1 hover:bg-gray-200 dark:hover:bg-dark-hover rounded">2</button>
-              <button className="px-3 py-1 hover:bg-gray-200 dark:hover:bg-dark-hover rounded">3</button>
-              <button className="px-3 py-1 hover:bg-gray-200 dark:hover:bg-dark-hover rounded">4</button>
-              <button className="px-3 py-1 hover:bg-gray-200 dark:hover:bg-dark-hover rounded">...</button>
-              <button className="px-3 py-1 hover:bg-gray-200 dark:hover:bg-dark-hover rounded">12</button>
-            </div>
           </div>
         </div>
       )}

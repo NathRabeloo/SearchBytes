@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-type FormType = "range" | "list" | "question";
+type FormType = "range" | "list" | "arquivo";
 
 interface DynamicFormProps {
     formType: FormType;
@@ -137,7 +137,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formType, onSubmit, initialDa
                 </>
             )}
 
-            {formType === "question" && (
+            {formType === "arquivo" && (
                 <>
                     <div>
                         <label className="text-sm block mb-1">Pergunta:</label>

@@ -7,7 +7,7 @@ const MainPage = () => {
   const router = useRouter();
 
   const handleLoginRedirect = () => {
-    router.push('/auth/login');
+    router.push('/sign-in');
   };
 
   const handleAlunoRedirect = () => {

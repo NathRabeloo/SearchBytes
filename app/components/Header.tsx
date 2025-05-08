@@ -27,22 +27,6 @@ const Header: React.FC<HeaderProps> = ({
   const router = useRouter();
   const [userName, setUserName] = useState<string>("Usuário");
 
-   /* useEffect(() => {
-    async function fetchUser() {
-      try {
-        const response = await fetch("/api/user");
-        const data = await response.json();
-        if (data?.name) {
-          setUserName(data.name);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-      }
-    }
-
-    fetchUser();
-  }, []);  */
-
   const handleButtonClick = () => {
     if (buttonLink) {
       router.push(buttonLink);
@@ -50,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className="w-full max-w-8xl h-auto min-h-[150px] md:min-h-[180px] bg-[#5A9BF6] dark:bg-dark-primary p-3 md:p-6 rounded-2xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
+    <div className="w-full max-w-8xl h-auto min-h-[150px] md:min-h-[180px] bg-[#5A9BF6] dark:bg-dark-secondary p-3 md:p-6 rounded-xl flex flex-col sm:flex-row items-center text-white shadow-lg relative overflow-hidden">
       
       <div className="w-[60%] text-left space-y-1 md:space-y-2 z-10">
         <p className="text-xs md:text-sm">{date}</p>

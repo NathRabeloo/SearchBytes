@@ -9,9 +9,11 @@ import {
   FaCog, 
   FaBell, 
   FaSignOutAlt,
-  FaMoon,
-  FaSun
 } from "react-icons/fa";
+
+import { ThemeSwitcher } from "./DarkModeToggle";
+
+import {signOutAction} from "@/app/actions"
 
 interface MenuItem {
   name: string;
@@ -23,16 +25,6 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode !== null) {
-        return savedMode === 'true';
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return false;
-  });
 
   // Detectar se está em dispositivo móvel
   useEffect(() => {
@@ -40,8 +32,6 @@ const Sidebar: React.FC = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
       
-      // Em dispositivos móveis, começamos com a sidebar recolhida
-      // Em desktop, sempre expandida
       if (mobile && !localStorage.getItem('sidebarState')) {
         setIsExpanded(false);
       } else if (!mobile) {
@@ -60,29 +50,6 @@ const Sidebar: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Gerenciar modo escuro
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', isDarkMode.toString());
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (localStorage.getItem('darkMode') === null) {
-        setIsDarkMode(e.matches);
-      }
-    };
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
   const toggleSidebar = () => {
     if (isMobile) {
       const newState = !isExpanded;
@@ -91,13 +58,12 @@ const Sidebar: React.FC = () => {
     }
   };
   
-  const toggleDarkMode = () => setIsDarkMode(prevMode => !prevMode);
 
   const menuItems: MenuItem[] = [
     { name: "Página Principal", icon: <FaHome size={20} />, route: "/home" },
-    { name: "Meu Perfil", icon: <FaUser size={20} />, route: "/perfil" },
-    { name: "Configurações", icon: <FaCog size={20} />, route: "/configuracoes" },
-    { name: "Notificações", icon: <FaBell size={20} />, route: "/notificacoes" },
+    { name: "Meu Perfil", icon: <FaUser size={20} />, route: "/profile" },
+    { name: "Configurações", icon: <FaCog size={20} />, route: "/settings" },
+    { name: "Notificações", icon: <FaBell size={20} />, route: "/notifications" },
   ];
 
   const handleMenuClick = (route: string) => {
@@ -110,7 +76,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className={`h-[90vh] ${isExpanded ? 'w-56' : 'w-20'} bg-blue-400 dark:bg-dark-secondary text-white border border-blue-300 dark:border-dark-border rounded-3xl flex flex-col pt-6 pb-4 px-4 shadow-lg ml-4 mt-6 mb-4 transition-all duration-300`}>
+    <div className={`h-[90vh] ${isExpanded ? 'w-56' : 'w-20'} hidden md:flex bg-blue-400 dark:bg-dark-secondary text-white border border-blue-300 dark:border-dark-border rounded-3xl flex-col pt-6 pb-4 px-4 shadow-lg ml-4 mt-6 mb-4 transition-all duration-300`}>
       
       {/* Cabeçalho da Sidebar */}
       <div className="flex justify-between items-center mb-4">
@@ -155,33 +121,16 @@ const Sidebar: React.FC = () => {
 
       {/* Rodapé da Sidebar */}
       <div className="mt-auto">
-        <hr className="border-gray-300 dark:border-gray-600 my-4" />
-
-        {/* Dark Mode */}
-        <button 
-          onClick={toggleDarkMode}
-          className="flex items-center w-full text-left p-3 hover:bg-blue-500 dark:hover:bg-dark-hover rounded-lg mb-2"
-        >
-          <div className={`w-8 h-8 flex items-center justify-center ${!isExpanded && 'mx-auto'}`}>
-            {isDarkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
-          </div>
-          {isExpanded && (
-            <>
-              <span className="ml-3">Dark Mode</span>
-              <span className={`ml-auto px-2 py-1 rounded-full text-xs ${
-                isDarkMode 
-                  ? "bg-blue-500 text-white" 
-                  : "bg-gray-200 text-gray-700"
-              }`}>
-                {isDarkMode ? "ON" : "OFF"}
-              </span>
-            </>
-          )}
-        </button>
+        <hr className="border-gray-300 dark:border-gray-600 my-4"/>
+        <div className="flex items-center lg:justify-between justify-center gap-3 lg:p-3">
+          {isExpanded && <span className="">Modo Escuro</span>}
+          {/* Dark Mode */}
+          <ThemeSwitcher/>
+        </div>
 
         {/* Logout */}
         <button
-          onClick={() => handleMenuClick("/logout")}
+          onClick={() => signOutAction()}
           className="flex items-center w-full text-left p-3 hover:bg-blue-500 dark:hover:bg-dark-hover rounded-lg"
         >
           <div className={`w-8 h-8 flex items-center justify-center ${!isExpanded && 'mx-auto'}`}>

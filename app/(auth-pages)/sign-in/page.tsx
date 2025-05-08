@@ -1,43 +1,84 @@
+'use client';
+
 import { signInAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Login({ searchParams }: { searchParams: Message }) {
   return (
-    <form className="flex-1 flex flex-col mt-5 min-w-64 md:w-80 ">
-      <h1 className="text-2xl font-medium">Faça Login</h1>
-      <p className="text-sm text-foreground">
-        Não possuí uma conta?{" "}
-        <Link className="text-foreground font-medium underline" href="/sign-up">
-          Registre-se
-        </Link>
-      </p>
-      <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-        <Label htmlFor="email">E-mail</Label>
-        <Input name="email" placeholder="you@example.com" required />
-        <div className="flex justify-between items-center">
-          <Label htmlFor="password">Senha</Label>
-          <Link
-            className="text-xs text-foreground underline"
-            href="/forgot-password"
-          >
-            Esqueceu sua senha?
-          </Link>
-        </div>
-        <Input
-          type="password"
-          name="password"
-          placeholder="Your password"
-          required
-        />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
-          Entrar
-        </SubmitButton>
-        <FormMessage message={searchParams} />
+    <div
+      className="w-screen h-screen bg-cover bg-center flex items-start justify-between px-10 pt-16"
+      style={{ backgroundImage: "url('/background-fatec.jpg')" }}
+    >
+      {/* Texto à esquerda (alinhado mais ao topo) */}
+      <div className="text-white max-w-md mt-4">
+        <h1 className="text-4xl font-bold mb-2">Olá, professor!</h1>
+        <p className="text-lg">
+          Faça seu login ou cadastro <br /> para acessar todas funcionalidades.
+        </p>
       </div>
-    </form>
+
+      {/* Card de login à direita com mais altura e espaço interno */}
+   <div className="bg-blue-500 bg-opacity-90 rounded-xl shadow-lg w-full max-w-md h-[700px] p-8 sm:p-12 text-white flex flex-col justify-center overflow-auto">
+
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/teacherdesk-logo.png"
+            alt="Teacher Desk Logo"
+            width={380}
+            height={40}
+            priority
+          />
+        </div>
+
+        <form className="flex flex-col gap-6">
+          <div>
+            <Label htmlFor="email" className="text-white">Usuário</Label>
+            <Input
+              name="email"
+              placeholder="you@example.com"
+              required
+              className="bg-white text-black"
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="password" className="text-white">Senha</Label>
+            </div>
+            <Input
+              type="password"
+              name="password"
+              placeholder="Sua senha"
+              required
+              className="bg-white text-black"
+            />
+              <Link
+                href="/forgot-password"
+                className="text-sm underline text-white"
+              >
+                Esqueceu a senha?
+              </Link>
+          </div>
+
+          <SubmitButton pendingText="Entrando..." formAction={signInAction}>
+            Entrar
+          </SubmitButton>
+
+          <Link
+            href="/sign-up"
+            className="block text-center text-white underline text-sm mt-2"
+          >
+            Criar Conta
+          </Link>
+
+          <FormMessage message={searchParams} />
+        </form>
+      </div>
+    </div>
   );
 }

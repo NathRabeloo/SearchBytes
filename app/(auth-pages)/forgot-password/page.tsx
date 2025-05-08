@@ -1,38 +1,57 @@
+'use client';
+
 import { forgotPasswordAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
+import Image from "next/image";
 
-export default function ForgotPassword({
-  searchParams,
-}: {
-  searchParams: Message;
-}) {
+export default function ForgotPassword({ searchParams }: { searchParams: Message }) {
   return (
-    <div>
-      <form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-64 max-w-64 mx-auto">
-        <div>
-          <h1 className="text-2xl font-medium">Reset Password</h1>
-          <p className="text-sm text-secondary-foreground">
-            Already have an account?{" "}
-            <Link className="text-primary underline" href="/sign-in">
-              Sign in
-            </Link>
-          </p>
+    <div
+      className="w-screen h-screen bg-cover bg-center flex items-start justify-between px-10 pt-16"
+      style={{ backgroundImage: "url('/background-fatec.jpg')" }}
+    >
+      {/* Texto à esquerda */}
+      <div className="text-white max-w-md mt-4">
+        <h1 className="text-4xl font-bold mb-2">Recuperar Senha</h1>
+        <p className="text-lg">
+          Informe seu e-mail <br /> para redefinir sua senha.
+        </p>
+      </div>
+
+      {/* Card de recuperação */}
+   <div className="bg-blue-500 bg-opacity-90 rounded-xl shadow-lg w-full max-w-md h-[700px] p-8 sm:p-12 text-white flex flex-col justify-center overflow-auto">
+
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/teacherdesk-logo.png"
+            alt="Teacher Desk Logo"
+            width={380}
+            height={40}
+            priority
+          />
         </div>
-        <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-          <Label htmlFor="email">Email</Label>
-          <Input name="email" placeholder="you@example.com" required />
+
+        <form className="flex flex-col gap-6">
+          <div>
+            <Label htmlFor="email" className="text-white">E-mail</Label>
+            <Input name="email" placeholder="you@example.com" required className="bg-white text-black" />
+          </div>
+
           <SubmitButton formAction={forgotPasswordAction}>
-            Reset Password
+            Redefinir Senha
           </SubmitButton>
+
+          <Link href="/sign-in" className="text-sm underline text-white text-center mt-2">
+            Já possui conta? Faça login
+          </Link>
+
           <FormMessage message={searchParams} />
-        </div>
-      </form>
-      <SmtpMessage />
+        </form>
+      </div>
     </div>
   );
 }
